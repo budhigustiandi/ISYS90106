@@ -1,3 +1,7 @@
+################
+# THING ENTITY #
+################
+
 # Mandatory
 
 thing_name:Temperature Monitoring System
@@ -19,3 +23,14 @@ property_description:Property Description 4
 
 property_name:Property Name 5
 property_description:Property Description 5
+
+###################
+# LOCATION ENTITY #
+###################
+
+# Insert True if you want to include Locations when you create a thing, insert False if you do not want to
+location_default:True
+location_name:UofC CCIT
+location_description:University of Calgary, CCIT building
+location_longitude:-114.133
+location_latitude:51.08

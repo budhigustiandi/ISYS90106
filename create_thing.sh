@@ -2,9 +2,11 @@
 
 # mandatory property
 
-name=`cat configuration.txt | grep thing_name | cut -d ":" -f 2`
-description=`cat configuration.txt | grep thing_description | cut -d ":" -f 2`
+thing_name=`cat configuration.txt | grep thing_name | cut -d ":" -f 2`
+thing_description=`cat configuration.txt | grep thing_description | cut -d ":" -f 2`
 url="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things"
+mandatory_content="\"name\": \"$thing_name\",
+                   \"description\": \"$thing_description\""
 
 # optional property
 
@@ -20,38 +22,57 @@ do
 	property_description+=("$description_of_property")
 done
 
-#property_name+=("Deployment Condition")
-#property_description+=("Deployed in a third floor balcony")
-#property_name+=("Case Used")
-#property_description+=("Radiation shield")
-#property_name+=("Owner")
-#property_description+=("Budhi Gustiandi")
-
 function insert_optional_property {
 	for (( i=0, j=1; i<${#property_name[@]}; i++, j++ ))
 	do
 		echo -n "\"${property_name[$i]}\": \"${property_description[$i]}\""
-		if [ $j -lt ${#property_name[@]} ]
+		if [[ $j -lt ${#property_name[@]} ]]
 		then
 			echo ","
 		fi
 	done
 }
 optional_property=`insert_optional_property`
+optional_content="\"properties\": {
+                 	$optional_property
+                 }"
 
-if [ ${#property_name[@]} -eq 0 ]
-then
+# location property
+
+location_default=`cat configuration.txt | grep location_default | cut -d ":" -f 2`
+location_name=`cat configuration.txt | grep location_name | cut -d ":" -f 2`
+location_description=`cat configuration.txt | grep location_description | cut -d ":" -f 2`
+location_longitude=`cat configuration.txt | grep location_longitude | cut -d ":" -f 2`
+location_latitude=`cat configuration.txt | grep location_latitude | cut -d ":" -f 2`
+location="\"Locations\": [{
+		\"name\": \"$location_name\",
+                \"description\": \"$location_description\",
+                \"encodingType\": \"application/vnd.geo+json\",
+                \"location\": {
+                	\"type\": \"Point\",
+                        \"coordinates\": [$location_longitude, $location_latitude]
+                }
+         }]"
+
+if [[ ${#property_name[@]} -eq 0 && "$location-default" == "False" ]]; then
 	content="{
-		\"name\": \"$name\",
-		\"description\": \"$description\"
+               	$mandatory_content
+        }"
+elif [[ ${#property_name[@]} -eq 0 && "$location-default" == "True" ]]; then
+	content="{
+		$mandatory_content,
+		$location
 	}"
+elif [[ ${#property_name[@]} -ne 0 && "$location-default" == "False" ]]; then
+	content="{
+               	$mandatory_content,
+               	$optional_content
+        }"
 else
 	content="{
-        	\"name\": \"$name\",
-        	\"description\": \"$description\",
-        	\"properties\": {
-			$optional_property
-        	}
+        	$mandatory_content,
+        	$optional_content,
+                $location
 	}"
 fi
 curl -XPOST -H "Content-type: application/json" -d "$content" "$url"
