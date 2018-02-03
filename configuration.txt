@@ -3,7 +3,7 @@
 ################
 
 # Thing ID (do not change! It will only generate by the system)
-thing_id=
+thing_id=1608617
 
 # Mandatory
 
