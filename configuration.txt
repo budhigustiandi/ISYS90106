@@ -2,9 +2,12 @@
 # THING ENTITY #
 ################
 
+# Thing ID (do not change! It will only generate by the system)
+thing_id=
+
 # Mandatory
 
-thing_name=Thing Name
+thing_name=Thing Name Test One
 thing_description=Thing Description
 url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things
 
@@ -15,21 +18,6 @@ property_description:Property Description 1
 
 property_name:Property Name 2
 property_description:Property Description 2
-
-property_name:Property Name 3
-property_description:Property Description 3
-
-property_name:Property Name 4
-property_description:Property Description 4
-
-property_name:Property Name 5
-property_description:Property Description 5
-
-property_name:Property Name 6
-property_description:Property Description 6
-
-property_name:Property Name 7
-property_description:Property Description 7
 
 ###################
 # LOCATION ENTITY #
