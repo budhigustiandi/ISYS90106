@@ -21,7 +21,10 @@ function update_thing_id {
 ########
 
 thing_name=`cat configuration.txt | grep thing_name | cut -d "=" -f 2 | sed 's/ /%20/g'`
-curl -X GET -H "Content-Type: application/json" "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things?\$filter=name%20eq%20%27$thing_name%27" | cut -d ":" -f 4 | cut -d "," -f 1 > thing_id
+thing_url=`cat configuration.txt | grep thing_url | cut -d "=" -f 2`
+additional_query="?\$filter=name%20eq%20%27$thing_name%27"
+url="$thing_url$additional_query"
+curl -X GET -H "Content-Type: application/json" "$url" | cut -d ":" -f 4 | cut -d "," -f 1 > thing_id
 thing_id=`cat thing_id`
 rm thing_id
 # Update the thing_id in the configuration.txt file

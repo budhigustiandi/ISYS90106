@@ -1,6 +1,6 @@
 #!/bin/bash
 
-url="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things"
+thing_url=`cat configuration.txt | grep thing_url | cut -d "=" -f 2`
 thing_id=$1
-url="$url($thing_id)"
+url="$thing_url($thing_id)"
 curl -X DELETE -H "Content-Type: application/json" -H -d "$url"
