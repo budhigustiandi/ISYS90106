@@ -3,21 +3,21 @@
 ################
 
 # Thing ID (do not change! It will only generate by the system)
-thing_id=1611176
+thing_id=1612089
 
 # Mandatory
 
-thing_name=Thing Name Test 2
-thing_description=Thing Description
+thing_name=Thing Name Test 4 Updated 1
+thing_description=Thing Description Updated 1
 url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things
 
 # Optional
 
-property_name:Property Name 1
-property_description:Property Description 1
+property_name=Property Name 1 Update 1
+property_description=Property Description 1 Updated 1
 
-property_name:Property Name 2
-property_description:Property Description 2
+property_name=Property Name 2 updated 1
+property_description=Property Description 2 Updated 1
 
 ###################
 # LOCATION ENTITY #
@@ -26,7 +26,7 @@ property_description:Property Description 2
 # Insert "True" (without double quote) if you want to include Locations when you create a thing, otherwise insert "False" (without double
 quote).
 
-add_location=True
+add_location=False
 
 # Insert "new location" (without double quote) if you want to define a new location or "existing location" (without double quote) if you want to use existing location entity existed in the server.
 
@@ -50,7 +50,7 @@ location_id=1608051
 # Add as many as datastream that are needed to be connected to the thing
 # Insert "True" (without double quote) if you want to include Datastreams when you create a thing, otherwise insert "False" (without double quote)
 
-add_datastream=True
+add_datastream=False
 datastream_name=Datastream Name
 datastream_description=Datastream Description
 datastream_observation_type=Datastream Observation Type
