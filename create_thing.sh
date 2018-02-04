@@ -33,9 +33,9 @@ if [[ $number_of_optional_property -gt 0 ]]; then
 		echo "Optional property description $i is $description_of_property."
 	done
 	function insert_optional_property {
-        for (( i=0, j=1; i<${#property_name[@]}; i++, j++ )); do
+        for (( i=0, j=1; i<$number_of_optional_property; i++, j++ )); do
             echo -n "\"${property_name[$i]}\": \"${property_description[$i]}\""
-            if [[ $j -lt ${#property_name[@]} ]]; then
+            if [[ $j -lt $number_of_optional_property ]]; then
                 echo ","
             fi
         done

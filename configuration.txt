@@ -3,11 +3,11 @@
 ################
 
 # Thing ID (do not change! It will only generate by the system)
-thing_id=1608617
+thing_id=1611176
 
 # Mandatory
 
-thing_name=Thing Name Test One
+thing_name=Thing Name Test 2
 thing_description=Thing Description
 url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things
 
@@ -23,7 +23,7 @@ property_description:Property Description 2
 # LOCATION ENTITY #
 ###################
 
-# Insert "True" (without double quote) if you want to include Locations when you create a thing, otherwise insert "False" (without double 
+# Insert "True" (without double quote) if you want to include Locations when you create a thing, otherwise insert "False" (without double
 quote).
 
 add_location=True
