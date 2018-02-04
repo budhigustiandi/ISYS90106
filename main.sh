@@ -7,6 +7,7 @@ thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 if [[ "$thing_id" == "" ]]; then
 	echo "No thing exist, a new thing will be created."
 	bash create_thing.sh
+	bash create_location.sh
 else
 	echo "There already a thing that matches with the configuration.txt file in the server."
 	echo "Do you want to use the existing one, update it, or create a new thing?"
@@ -21,8 +22,10 @@ else
 					     	case $option_2 in
 							"Yes") bash delete_thing.sh $thing_id
 						       	       bash create_thing.sh
+							       bash create_location.sh
 						       	       break;;
 							"No") bash create_thing.sh
+							      bash create_location.sh
 						              break;;
 							"Quit") break;;
 							*) echo "Undefined option.";;

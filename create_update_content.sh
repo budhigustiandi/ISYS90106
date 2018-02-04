@@ -44,40 +44,6 @@ if [[ $number_of_optional_property -gt 0 ]]; then
 	content="$content, $optional_content"
 fi
 
-# location property
-
-add_location=`cat configuration.txt | grep add_location | cut -d "=" -f 2`
-if [[ "$add_location" == True ]]; then
-	location_source=`cat configuration.txt | grep location_source | cut -d "=" -f 2`
-	if [[ "$location_source" == "new location" ]]; then
-		echo "Add a new location..."
-		location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
-		echo "Location name is $location_name"
-		location_description=`cat configuration.txt | grep location_description | cut -d "=" -f 2`
-		echo "Location description is $location_description"
-		location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
-		echo "Location longitude is $location_longitude"
-		location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
-		echo "Location latitude is $location_latitude"
-		location="\"Locations\": [{
-				 \"name\": \"$location_name\",
-                 \"description\": \"$location_description\",
-                 \"encodingType\": \"application/vnd.geo+json\",
-                 \"location\": {
-					\"type\": \"Point\",
-                    \"coordinates\": [$location_longitude, $location_latitude]
-                }
-        }]"
-	elif [[ "$location_source" == "existing location" ]]; then
-		echo "Use existing location."
-		location_id=`cat configuration.txt | grep location_id | cut -d "=" -f 2`
-		location="\"Locations\": [{\"@iot.id\":$location_id}]"
-	fi
-	content="$content, $location"
-else
-	echo "No location added to the created thing."
-fi
-
 # datastream property
 
 add_datastream=`cat configuration.txt | grep add_datastream | cut -d "=" -f 2`
