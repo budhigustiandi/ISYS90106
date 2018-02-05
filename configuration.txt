@@ -1,3 +1,5 @@
+base_url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0
+
 ################
 # THING ENTITY #
 ################
@@ -23,10 +25,10 @@ property_description=Property Description 5
 # LOCATION ENTITY #
 ###################
 
-location_name=Location Name 3
-location_description=Location Description 3
-location_longitude=3
-location_latitude=3
+location_name=Location Name 10
+location_description=Location Description 10
+location_longitude=10
+location_latitude=10
 
 #####################
 # DATASTREAM ENTITY #
