@@ -13,7 +13,7 @@ else
 	echo "Do you want to use the existing one, update it, or create a new thing?"
 	select option in "Use existing one." "Update existing one." "Create a new one." "Quit"; do
 		case $option in
-			"Use existing one.") echo "You want to use existing one"
+			"Use existing one.") echo "You want to use existing one."
 					     break;;
 			"Update existing one.") bash update_thing.sh
 						break;;
@@ -23,9 +23,13 @@ else
 							"Yes") bash delete_thing.sh $thing_id
 						       	       bash create_thing.sh
 							       bash create_location.sh
+							       bash create_datastream.sh
 						       	       break;;
-							"No") bash create_thing.sh
+							"No") thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
+							      echo "Previous Thing ID = $thing_id" >> log
+							      bash create_thing.sh
 							      bash create_location.sh
+							      bash create_datastream.sh
 						              break;;
 							"Quit") break;;
 							*) echo "Undefined option.";;
@@ -37,3 +41,4 @@ else
 		esac
 	done
 fi
+# Run the program normally...
