@@ -14,12 +14,12 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	datastream_observation_type=`echo $query_result | sed 's/observationType/\nobservationType/g' | grep observationType | head -$i | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	unit_of_measurement_name=`echo $query_result | sed 's/name/\nname/g' | grep name | head -$k | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	unit_of_measurement_symbol=`echo $query_result | sed 's/symbol/\nsymbol/g' | grep symbol | head -$i | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-	unit_of_measurement_definition=`echo $query_result | sed 's/definition/\ndefinition/g' | grep definition | head -$i | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	unit_of_measurement_definition=`echo $query_result | sed 's/definition/\ndefinition/g' | grep definition | head -$i | tail -1 | cut -d ":" -f 2 | cut -d "}" -f 1`
 	read -p "Old datastream name is $datastream_name. Please enter new datastream name. > " datastream_name
 	read -p "Old datastream description is $datastream_description. Please enter new datastream description. > " datastream_description
 	read -p "Old datastream observation type is $datastream_observation_type. Please enter new datastream observation type. > " datastream_observation_type
 	read -p "Old unit of measurement name is $unit_of_measurement_name. Please enter new unit of measurement name. > " unit_of_measurement_name
-	read -p "Old unit of measurement symbol is $unit_measurement_symbol. Please enter new unit of measurement symbol. > " unit_of_measurement_symbol
+	read -p "Old unit of measurement symbol is $unit_of_measurement_symbol. Please enter new unit of measurement symbol. > " unit_of_measurement_symbol
 	read -p "Old unit of measurement definition is $unit_of_measurement_definition. Please enter new unit of measurement definition. > " unit_of_measurement_definition
 	datastream="{\"name\": \"$datastream_name\",
          	   \"description\": \"$datastream_description\",
@@ -31,4 +31,6 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
           	   }}"
 	url="$base_url/Datastreams($datastream_id)"
 	curl -X PATCH -H "Content-Type: application/json" -d "$datastream" "$url"
+	echo
+	echo "Datastream $i with ID $datastream_id has been updated."
 done
