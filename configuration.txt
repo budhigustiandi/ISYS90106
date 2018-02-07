@@ -39,28 +39,34 @@ location_latitude=10
 # DATASTREAM ENTITY #
 #####################
 
-# Add as many as datastream(s) and associated observed property(ies) and sensor(s) that are needed to be connected to the thing
+# Add as many as datastream(s) and associated observed property(ies), sensor(s) and observation(s) that are needed to be connected to the thing
 
-datastream_name=Datastream Name 4
-datastream_description=Datastream Description 4
-datastream_observation_type=Datastream Observation Type 4
-unit_of_measurement_name=Unit of Measurement Name 4
-unit_of_measurement_symbol=Unit of Measurement Symbol 4
-unit_of_measurement_definition=Unit of Measurement Definition 4
+datastream_name=Room Temperature
+datastream_description=Datastream for recording temperature
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Degree Celcius
+unit_of_measurement_symbol=degC
+unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius
 
 	#####################
 	# OBSERVED PROPERTY #
 	#####################
 
-	observed_property_name=Observed Property Name
-	observed_property_description=Observed Property Description
-	observed_property_definition=Observed Property Definition
+	observed_property_name=Area Temperature
+	observed_property_description=The degree or intensity of heat present in the area
+	observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature
 
 	##########
 	# SENSOR #
 	##########
 
-	sensor_name=Sensor Name
-	sensor_description=Sensor Description
+	sensor_name=DHT11
+	sensor_description=DHT11 temperature sensor
 	sensor_encoding_type=application/pdf
-	sensor_metadata=Sensor Metadata
+	sensor_metadata=htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf
+
+	###############
+	# OBSERVATION #
+	###############
+	
+	observation_command=readTemperature.py
