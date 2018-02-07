@@ -13,9 +13,10 @@ else
 	echo "Do you want to use the existing one, update it, or create a new thing?"
 	select option in "Use existing one." "Update existing one." "Create a new one." "Quit"; do
 		case $option in
-			"Use existing one.") echo "You want to use existing one."
+			"Use existing one.") bash run_observation.sh
 					     break;;
 			"Update existing one.") bash update_thing.sh
+						bash run_observation.sh
 						break;;
 			"Create a new one.") echo "do you want to delete the exising thing?"
 					     select option_2 in "Yes" "No" "Quit"; do
@@ -24,12 +25,14 @@ else
 						       	       bash create_thing.sh
 							       bash create_location.sh
 							       bash create_datastream.sh
+							       bash run-observation.sh
 						       	       break;;
 							"No") thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 							      echo "Previous Thing ID = $thing_id" >> log
 							      bash create_thing.sh
 							      bash create_location.sh
 							      bash create_datastream.sh
+							      bash run_observation.sh
 						              break;;
 							"Quit") break;;
 							*) echo "Undefined option.";;

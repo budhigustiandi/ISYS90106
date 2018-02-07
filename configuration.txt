@@ -69,7 +69,37 @@ unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances
 	# OBSERVATION #
 	###############
 	
-	observation_command=readTemperature.py
+	observation_command=read_temperature.py
+
+datastream_name=Room Humidity
+datastream_description=Datastream for recording humidity
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Percentage
+unit_of_measurement_symbol=%
+unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%
+
+        #####################
+        # OBSERVED PROPERTY #
+        #####################
+
+        observed_property_name=Area Humidity
+        observed_property_description=The degree or intensity of humidity present in the area
+        observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaHumidity
+
+	##########
+        # SENSOR #
+        ##########
+
+        sensor_name=DHT11
+        sensor_description=DHT11 humidity sensor
+        sensor_encoding_type=application/pdf
+        sensor_metadata=htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf
+
+        ###############
+        # OBSERVATION #
+        ###############
+
+        observation_command=read_humidity.py
 	
 ########
 # TIME #
