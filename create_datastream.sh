@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Create header for the run_observation.sh
+
+echo '\#!/bin/bash' > run_observation.sh
+echo 'time_between_observation=`cat configuration.txt | grep time_between_observation | cut -d "=" -f 2`' >> run_observation.sh
+echo 'while [ True ]; do' >> run_observation.sh
+
 # Count number of datastream(s) connected to the thing
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
@@ -57,7 +63,21 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
         	   } }"
 	datastream_url="$base_url/Datastreams"
 	curl -X POST -H "Content-Type: application/json" -d "$datastream" "$datastream_url"
-
-	# Update run_observation.sh script
 	observation_command=`cat configuration.txt | grep observation_command | head -$i | tail -1 | cut -d "=" -f 2`
+	query_result=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
+	datastream_id=`echo $query_result | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | head -$i | tail -1 |cut -d ":" -f 2 | cut -d "," -f 1`
+	
+	# Update run_observation.sh
+	
+		echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> run_observation.sh
+		echo 'observation_result=`sudo python observation/'$observation_command'`' >> run_observation.sh
+		echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> run_observation.sh
+			echo '\"phenomenonTime\": \"$time\",' >> run_observation.sh
+			echo '\"resultTime\": \"$time\",' >> run_observation.sh
+			echo '\"result\": \"$observation_result\",' >> run_observation.sh
+			echo '\"Datastream\":{\"@iot.id\":'$datastream_id'}' >> run_observation.sh
+		echo '}" "'$base_url'/Observations"' >> run_observation.sh
 done
+
+echo 'sleep $time_between_observation' >> run_observation.sh
+echo "done" >> run_observation.sh

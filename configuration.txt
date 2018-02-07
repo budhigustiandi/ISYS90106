@@ -70,3 +70,9 @@ unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances
 	###############
 	
 	observation_command=readTemperature.py
+	
+########
+# TIME #
+########
+
+time_between_observation=60
