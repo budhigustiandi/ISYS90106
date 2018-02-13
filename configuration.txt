@@ -30,10 +30,10 @@ property_description=Property Description 5
 # LOCATION ENTITY #
 ###################
 
-location_name=Location Name 10
-location_description=Location Description 10
-location_longitude=10
-location_latitude=10
+location_name=Home Laboratory
+location_description=Laboratory that was built inside the home
+location_longitude=106.8473377
+location_latitude=-6.3238989
 
 #####################
 # DATASTREAM ENTITY #
@@ -100,6 +100,36 @@ unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances
         ###############
 
         observation_command=read_humidity.py
+
+datastream_name=Light Intensity
+datastream_description=Datastream for recording light intensity
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Unitless
+unit_of_measurement_symbol=
+unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%
+
+        #####################
+        # OBSERVED PROPERTY #
+        #####################
+
+        observed_property_name=Area Light Intensity
+        observed_property_description=The intensity of light present in the area
+        observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#LightIntensity
+
+        ##########
+        # SENSOR #
+        ##########
+
+        sensor_name=Generic Light Sensor
+        sensor_description=Generic Light Sensor
+        sensor_encoding_type=application/pdf
+        sensor_metadata=htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf
+
+        ###############
+        # OBSERVATION #
+        ###############
+
+        observation_command=read_light.py
 	
 ########
 # TIME #
