@@ -16,7 +16,7 @@ content=$mandatory_content
 
 property_name=()
 property_description=()
-number_of_optional_property=`cat configuration.txt | grep property_name | wc -l`
+number_of_optional_property=`cat configuration.txt | grep ^property_name | wc -l`
 if [[ $number_of_optional_property -gt 0 ]]; then
 	if [[ $number_of_optional_property -eq 1 ]]; then
 		echo "There is 1 optional property."
@@ -24,10 +24,10 @@ if [[ $number_of_optional_property -gt 0 ]]; then
 		echo "There are $number_of_optional_property optional properties."
 	fi
 	for (( i=1; i<=$number_of_optional_property; i++ )); do
-        	name_of_property=`cat configuration.txt | grep property_name | head -$i | tail -1 | cut -d "=" -f 2`
+        	name_of_property=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
         	property_name+=("$name_of_property")
 		echo "Optional property name $i is $name_of_property."
-        	description_of_property=`cat configuration.txt | grep property_description | head -$i | tail -1 | cut -d "=" -f 2`
+        	description_of_property=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
         	property_description+=("$description_of_property")
 		echo "Optional property description $i is $description_of_property."
 	done
