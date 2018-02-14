@@ -1,54 +1,20 @@
-import serial
-import RPi.GPIO as GPIO      
-import os, time
-from decimal import *
- 
-delay = 1
- 
-GPIO.setmode(GPIO.BOARD)    
- 
-def find(str, ch):
-    for i, ltr in enumerate(str):
-        if ltr == ch:
-            yield i
- 
-port = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=1)
-cd=1
-while cd &lt;= 50:
-    ck=0
-    fd=''
-    while ck &lt;= 50:
-        rcv = port.read(10)
- 
-        fd=fd+rcv
-        ck=ck+1
- 
-    #print fd
-    if '$GPRMC' in fd:
-        ps=fd.find('$GPRMC')
-        dif=len(fd)-ps
-        #print dif
-        if dif &gt; 50:
-            data=fd[ps:(ps+50)]
-            print data
-            p=list(find(data, ","))
-            lat=data[(p[2]+1):p[3]]
-            lon=data[(p[4]+1):p[5]]
- 
-            s1=lat[2:len(lat)]
-            s1=Decimal(s1)
-            s1=s1/60
-            s11=int(lat[0:2])
-            s1=s11+s1
- 
-            s2=lon[3:len(lon)]
-            s2=Decimal(s2)
-            s2=s2/60
-            s22=int(lon[0:3])
-            s2=s22+s2
- 
-            print s1
-            print s2   
- 
-    cd=cd+1
-    print cd
+#!/usr/bin/python
+# get lines of text from serial port, save them to a file
+
+from __future__ import print_function
+import serial, io
+
+addr  = '/dev/serial0' # serial port to read data from
+baud  = 9600           # baud rate for serial port
+fname = 'gps-log.dat'  # log file to save data in
+fmode = 'a'            # log file mode = append
+
+with serial.Serial(addr,9600) as pt, open(fname,fmode) as outf:
+    spb = io.TextIOWrapper(io.BufferedRWPair(pt,pt,1),
+                           encoding='ascii', errors='ignore', newline='\r',line_buffering=True)
+    spb.readline() # throw away first line; likely to start mid-sentence (incomplete)
+    while (1):
+        x = spb.readline() # read one line of text from serial port
+        print (x,end='')   # echo line of text on screen
+        outf.write(x)      # write line of text to file
+        outf.flush()       # make sure it actually gets written out
