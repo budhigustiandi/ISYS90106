@@ -5,12 +5,21 @@ echo '<!doctype html>
 <head>
 	<meta charset="utf-8">
 	<title>Thing Name</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+   crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
+   integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+   crossorigin=""></script>
 	<style>
 	h2 {
 		color: blue;
 	}
 	.bold {
 		font-weight: bold;
+	}
+	#mapid {
+		height: 300px;
 	}
 	</style>
 </head>
@@ -52,7 +61,19 @@ echo '</ul>
 	<ul>
 		<li><span class="bold">Longitude: </span>'$location_longitude'</li>
 		<li><span class="bold">Latitude: </span>'$location_latitude'</li>
-	</ul>
+	</ul>' >> index.htm
+	
+echo '<div id="mapid"></div>
+	<script>
+		var mymap = L.map('"'mapid'"').setView(['$location_latitude', '$location_longitude'], 17);
+		L.tileLayer('"'"'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'"'"', {
+			attribution: '"'"'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'"'"',
+			maxZoom: 18,
+			id: '"'"'mapbox.streets'"'"'
+		}).addTo(mymap);
+		var marker = L.marker(['$location_latitude', '$location_longitude']).addTo(mymap);
+		marker.bindPopup("Thing'"'"'s location.").openPopup();
+	</script>
 	<h1>Datastream</h1>' >> index.htm
 
 number_of_datastream=`cat ../configuration.txt | grep datastream_name | wc -l`
