@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Create location script is for dynamic data
+
+# Read location from GPS
+bash observation/read_gps.sh
+
 echo "Create a new location..."
 location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
 echo "Location name is $location_name"
