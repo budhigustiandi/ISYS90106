@@ -28,7 +28,7 @@ if [[ "$location_status" == "static" ]]; then
 	echo "Location description is $location_description"
 	get_location
 	location_id=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Locations" | cut -d ":" -f 4 | cut -d "," -f 1`
-	curl -X PATCH -H "Content-Type: application/json" -d "$content" "$base_url/Locations($location_id)"
+	curl -X PATCH -H "Content-Type: application/json" -d "$location" "$base_url/Locations($location_id)"
 elif [[ "$location_status" == "dynamic" ]]; then
 	echo "Creating a new location..."
 	location_name="Mobile"
@@ -36,6 +36,7 @@ elif [[ "$location_status" == "dynamic" ]]; then
 	location_description="Location is based on the GPS measurement."
 	echo $location_description
 	get_location
-	curl -XPOST -H "Content-type: application/json" -d ''$location'' "$base_url/Things($thing_id)/Locations"
+	curl -XPOST -H "Content-type: application/json" -d "$location" "$base_url/Things($thing_id)/Locations"
 else
 	echo "Please choose a mode (static/dynamic) in the configuration.txt file."
+fi
