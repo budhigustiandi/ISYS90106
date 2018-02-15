@@ -11,6 +11,8 @@ echo '<!doctype html>
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
+   <script src="https://cdn.plot.ly/plotly-1.17.3.min.js"></script>
+   <script src="http://sdk.sensorup.com/sta-chart/sta-chart-0.0.5.min.js"></script>
 	<style>
 	h2 {
 		color: blue;
@@ -76,8 +78,10 @@ echo '<div id="mapid"></div>
 	</script>
 	<h1>Datastream</h1>' >> index.htm
 
+datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
 number_of_datastream=`cat ../configuration.txt | grep datastream_name | wc -l`
 for (( i=1; i<=$number_of_datastream; i++ )); do
+		datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 		datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
 		datastream_description=`cat ../configuration.txt | grep datastream_description | head -$i | tail -1 | cut -d "=" -f 2`
 		datastream_observation_type=`cat ../configuration.txt | grep datastream_observation_type | head -$i | tail -1 | cut -d "=" -f 2`
@@ -115,6 +119,18 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				<li><span class="bold">Encoding Type: </span>'$sensor_encoding_type'</li>
 				<li><span class="bold">Metadata: </span>'$sensor_metadata'</li>
 			</ul>' >> index.htm
+		
+		echo '<div id="datastream_'$datastream_id'"></div>
+		<script>
+			stachart.generateChart({
+				'"'"'targetId'"'"': '"'"'datastream_'$datastream_id''"'"',
+			    '"'"'staBaseUrl'"'"': '"'"''$base_url''"'"',
+			    '"'"'datastreamId'"'"': '"'"''$datastream_id''"'"'
+			});
+		 </script>' >> index.htm
+		
+		
+		
 done
 echo '</body>
 <html>' >> index.htm
