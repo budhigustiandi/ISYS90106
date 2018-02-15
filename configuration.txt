@@ -30,10 +30,14 @@ property_description=Budhi Gustiandi
 # LOCATION ENTITY #
 ###################
 
+# If the thing will be put in a fixed location, choose static
+# If the thing will be used in mobile location, choose dynamic
+location_status=dynamic
+
 location_name=Home Laboratory
 location_description=Workspace at home built as a laboratory
-location_longitude=106.8473377
-location_latitude=-6.3238989
+location_longitude=106.84597
+location_latitude=-6.159867
 
 #####################
 # DATASTREAM ENTITY #
@@ -48,28 +52,28 @@ unit_of_measurement_name=Degree Celcius
 unit_of_measurement_symbol=degC
 unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius
 
-	#####################
-	# OBSERVED PROPERTY #
-	#####################
+#####################
+# OBSERVED PROPERTY #
+#####################
 
-	observed_property_name=Area Temperature
-	observed_property_description=A physical quantity expressing hot and cold
-	observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature
+observed_property_name=Area Temperature
+observed_property_description=A physical quantity expressing hot and cold
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature
 
-	##########
-	# SENSOR #
-	##########
+##########
+# SENSOR #
+##########
 
-	sensor_name=DHT11
-	sensor_description=DHT11 temperature and humidity module
-	sensor_encoding_type=application/pdf
-	sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
+sensor_name=DHT11
+sensor_description=DHT11 temperature and humidity module
+sensor_encoding_type=application/pdf
+sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
 
-	###############
-	# OBSERVATION #
-	###############
-	
-	observation_command=read_temperature.py
+###############
+# OBSERVATION #
+###############
+
+observation_command=read_temperature.py
 
 datastream_name=Room Humidity
 datastream_description=Datastream for recording humidity
@@ -78,28 +82,28 @@ unit_of_measurement_name=Percentage
 unit_of_measurement_symbol=%
 unit_of_measurement_definition=1 part of 100
 
-        #####################
-        # OBSERVED PROPERTY #
-        #####################
+#####################
+# OBSERVED PROPERTY #
+#####################
 
-        observed_property_name=Absolute Humidity
-        observed_property_description=Absolute humidity is the mass of water in a particular volume of air. It is a measure of the density of water vapor in an atmosphere.
-        observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AbsoluteHumidity
+observed_property_name=Absolute Humidity
+observed_property_description=Absolute humidity is the mass of water in a particular volume of air. It is a measure of the density of water vapor in an atmosphere.
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AbsoluteHumidity
 
-		##########
-        # SENSOR #
-        ##########
+##########
+# SENSOR #
+##########
 
-        sensor_name=DHT11
-        sensor_description=DHT11 temperature and humidity module
-        sensor_encoding_type=application/pdf
-        sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
+sensor_name=DHT11
+sensor_description=DHT11 temperature and humidity module
+sensor_encoding_type=application/pdf
+sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
 
-        ###############
-        # OBSERVATION #
-        ###############
+###############
+# OBSERVATION #
+###############
 
-        observation_command=read_humidity.py
+observation_command=read_humidity.py
 
 datastream_name=Room Light Intensity
 datastream_description=Datastream for recording light intensity
@@ -108,29 +112,29 @@ unit_of_measurement_name=Lux
 unit_of_measurement_symbol=lx
 unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Lux
 
-        #####################
-        # OBSERVED PROPERTY #
-        #####################
+#####################
+# OBSERVED PROPERTY #
+#####################
 
-        observed_property_name=Luminous Flux
-        observed_property_description=Luminous Flux or Luminous Power is the measure of the perceived power of light. It differs from radiant flux, the measure of the total power of light emitted, in that luminous flux is adjusted to reflect the varying sensitivity of the human eye to different wavelengths of light.
-        observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#LuminousFlux
+observed_property_name=Luminous Flux
+observed_property_description=Luminous Flux or Luminous Power is the measure of the perceived power of light. It differs from radiant flux, the measure of the total power of light emitted, in that luminous flux is adjusted to reflect the varying sensitivity of the human eye to different wavelengths of light.
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#LuminousFlux
 
-        ##########
-        # SENSOR #
-        ##########
+##########
+# SENSOR #
+##########
 
-        sensor_name=Photoresistor Light Sensor
-        sensor_description=A Light Sensor is something that can be used to detect the current ambient light level - i.e. how bright/dark it is. It changes its resistance based on the amount of light that falls upon it.
-        sensor_encoding_type=application/html
-        sensor_metadata=http://education.rec.ri.cmu.edu/content/electronics/boe/light_sensor/1.html
+sensor_name=Photoresistor Light Sensor
+sensor_description=A Light Sensor is something that can be used to detect the current ambient light level - i.e. how bright/dark it is. It changes its resistance based on the amount of light that falls upon it.
+sensor_encoding_type=application/html
+sensor_metadata=http://education.rec.ri.cmu.edu/content/electronics/boe/light_sensor/1.html
 
-        ###############
-        # OBSERVATION #
-        ###############
+###############
+# OBSERVATION #
+###############
 
-        observation_command=read_light.py
-	
+observation_command=read_light.py
+
 ########
 # TIME #
 ########

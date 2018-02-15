@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Update location only for static mode
+
+# Read location from GPS
+bash observation/read_gps.sh
+
 echo "Update location..."
 location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
 echo "Location name is $location_name"
