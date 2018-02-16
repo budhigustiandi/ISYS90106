@@ -5,9 +5,12 @@
 
 thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 if [[ "$thing_id" == "" ]]; then
-	echo "No thing exist, a new thing will be created."
+	echo "######################################################"
+	echo "# Thing does not exist, a new thing will be created. #"
+	echo "######################################################"
+	echo ""
 	bash create_thing.sh
-	bash create_location.sh
+	bash create_update_location.sh
 else
 	echo "There already a thing that matches with the configuration.txt file in the server."
 	echo "Do you want to use the existing one, update it, or create a new thing?"

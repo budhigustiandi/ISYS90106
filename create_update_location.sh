@@ -3,6 +3,10 @@
 # Read location from GPS
 bash observation/read_gps.sh
 
+base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
+thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
+location_status=`cat configuration.txt | grep location_status | cut -d "=" -f 2`
+
 function get_location {
 	location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
 	echo "Location longitude is $location_longitude"
@@ -17,9 +21,6 @@ function get_location {
 			  }}'
 }
 
-base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
-thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
-location_status=`cat configuration.txt | grep location_status | cut -d "=" -f 2`
 if [[ "$location_status" == "static" ]]; then
 	echo "Updating existing location..."
 	location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-echo "Create content..."
-
-# mandatory property
+# Get mandatory property(ies) from the configuration.txt file
 
 thing_name=`cat configuration.txt | grep thing_name | cut -d "=" -f 2`
 thing_description=`cat configuration.txt | grep thing_description | cut -d "=" -f 2`
@@ -12,7 +10,7 @@ echo "Thing's name is $thing_name."
 echo "Thing's description is $thing_description."
 content=$mandatory_content
 
-# optional property
+# Get optional property(ies) from the configuration.txt file
 
 property_name=()
 property_description=()
@@ -23,14 +21,23 @@ if [[ $number_of_optional_property -gt 0 ]]; then
 	else
 		echo "There are $number_of_optional_property optional properties."
 	fi
+	optional_content='"properties": {'
 	for (( i=1; i<=$number_of_optional_property; i++ )); do
-        	name_of_property=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
-        	property_name+=("$name_of_property")
-		echo "Optional property name $i is $name_of_property."
-        	description_of_property=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
-        	property_description+=("$description_of_property")
-		echo "Optional property description $i is $description_of_property."
+		property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
+		property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
+		echo -n "\"${property_name[$i]}\": \"${property_description[$i]}\""
 	done
+	optional_content=$optional_content}
+fi
+	#for (( i=1; i<=$number_of_optional_property; i++ )); do
+    #    name_of_property=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
+    #    property_name+=("$name_of_property")
+	#	echo "Optional property name $i is $name_of_property."
+    #    description_of_property=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
+    #    property_description+=("$description_of_property")
+	#	echo "Optional property description $i is $description_of_property."
+	#done
+	
 	function insert_optional_property {
         for (( i=0, j=1; i<$number_of_optional_property; i++, j++ )); do
             echo -n "\"${property_name[$i]}\": \"${property_description[$i]}\""

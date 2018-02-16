@@ -4,8 +4,6 @@
 
 echo '#!/bin/bash' > run_observation.sh
 echo "" >> run_observation.sh
-echo 'time_between_observation=`cat configuration.txt | grep time_between_observation | cut -d "=" -f 2`' >> run_observation.sh
-echo 'while [ True ]; do' >> run_observation.sh
 
 # Count number of datastream(s) connected to the thing
 
@@ -80,6 +78,3 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 			echo '\"Datastream\":{\"@iot.id\":'$datastream_id'}' >> run_observation.sh
 		echo '}" "'$base_url'/Observations"' >> run_observation.sh
 done
-
-echo 'sleep $time_between_observation' >> run_observation.sh
-echo "done" >> run_observation.sh
