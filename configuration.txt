@@ -135,8 +135,8 @@ sensor_metadata=http://education.rec.ri.cmu.edu/content/electronics/boe/light_se
 
 observation_command=read_light.py
 
-########
-# TIME #
-########
+########################
+# OBSERVATION INTERVAL #
+########################
 
-time_between_observation=60
+observation_interval=60

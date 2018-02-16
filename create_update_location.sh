@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Read location from GPS
+echo "######################################"
+echo "# Read location from GPS receiver... #"
+echo "######################################"
+echo ""
 bash observation/read_gps.sh
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`

@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Create header for the run_observation.sh
+# This script is not only create datastream(s) for the registered thing, but also create create_observation.sh script that process all the sensor readings automatically.
 
-echo '#!/bin/bash' > run_observation.sh
-echo "" >> run_observation.sh
+# Create header for the create_observation.sh
+
+echo '#!/bin/bash' > create_observation.sh
+echo "" >> create_observation.sh
 
 # Count number of datastream(s) connected to the thing
 
@@ -40,41 +42,42 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	echo "Sensor encoding type $i is $sensor_encoding_type."
 	sensor_metadata=`cat configuration.txt | grep sensor_metadata | head -$i | tail -1 | cut -d "=" -f 2`
 	echo "Sensor metadata $i is $sensor_metadata."
-	datastream="{\"name\": \"$datastream_name\",
-          	   \"description\": \"$datastream_description\",
-          	   \"observationType\": \"$datastream_observation_type\",
-          	   \"unitOfMeasurement\": {
-        		\"name\": \"$unit_of_measurement_name\",
-                	\"symbol\": \"$unit_of_measurement_symbol\",
-                	\"definition\": \"$unit_of_measurement_definition\"
+	datastream='{"name": "'$datastream_name'",
+          	   "description": "'$datastream_description'",
+          	   "observationType": "'$datastream_observation_type'",
+          	   "unitOfMeasurement": {
+					"name": "'$unit_of_measurement_name'",
+                	"symbol": "'$unit_of_measurement_symbol'",
+                	"definition": "'$unit_of_measurement_definition'"
           	   },
-	  	   \"Thing\":{\"@iot.id\":$thing_id},
-          	   \"ObservedProperty\": {
-        		\"name\": \"$observed_property_name\",
-                	\"description\": \"$observed_property_description\",
-                	\"definition\": \"$observed_property_definition\"
+	  	       "Thing":{"@iot.id":'$thing_id'},
+          	   "ObservedProperty": {
+					"name": "'$observed_property_name'",
+                	"description": "'$observed_property_description'",
+                	"definition": "'$observed_property_definition'"
           	   },
-          	   \"Sensor\": {
-                	\"name\": \"$sensor_name\",
-                	\"description\": \"$sensor_description\",
-                	\"encodingType\": \"$sensor_encoding_type\",
-                	\"metadata\": \"$sensor_metadata\"
-        	   } }"
-	datastream_url="$base_url/Datastreams"
-	curl -X POST -H "Content-Type: application/json" -d "$datastream" "$datastream_url"
+          	   "Sensor": {
+                	"name": "'$sensor_name'",
+                	"description": "'$sensor_description'",
+                	"encodingType": "'$sensor_encoding_type'",
+                	"metadata": "'$sensor_metadata'"
+        	   }}'
+	curl -X POST -H "Content-Type: application/json" -d "$datastream" "$base_url/Datastreams"
 	observation_command=`cat configuration.txt | grep observation_command | head -$i | tail -1 | cut -d "=" -f 2`
 	query_result=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
-	# This is a little bit different query since new datastreams are pushed to the top
-	datastream_id=`echo $query_result | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | head -1 | tail -1 |cut -d ":" -f 2 | cut -d "," -f 1`
+	
+	# The query is reversed since new datastreams are pushed to the top
+	
+	datastream_id=`echo $query_result | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | head -1 | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 
-	# Update run_observation.sh
+	# Update create_observation.sh
 
-		echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> run_observation.sh
-		echo 'observation_result=`sudo python observation/'$observation_command'`' >> run_observation.sh
-		echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> run_observation.sh
-			echo '\"phenomenonTime\": \"$time\",' >> run_observation.sh
-			echo '\"resultTime\": \"$time\",' >> run_observation.sh
-			echo '\"result\": \"$observation_result\",' >> run_observation.sh
-			echo '\"Datastream\":{\"@iot.id\":'$datastream_id'}' >> run_observation.sh
-		echo '}" "'$base_url'/Observations"' >> run_observation.sh
+	echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> create_observation.sh
+	echo 'observation_result=`sudo python observation/'$observation_command'`' >> create_observation.sh
+	echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> create_observation.sh
+		echo '\"phenomenonTime\": \"$time\",' >> create_observation.sh
+		echo '\"resultTime\": \"$time\",' >> create_observation.sh
+		echo '\"result\": \"$observation_result\",' >> create_observation.sh
+		echo '\"Datastream\":{\"@iot.id\":'$datastream_id'}' >> create_observation.sh
+	echo '}" "'$base_url'/Observations"' >> create_observation.sh
 done
