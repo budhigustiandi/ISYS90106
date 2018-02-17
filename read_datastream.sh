@@ -46,3 +46,4 @@ datastream='{"name": "'$datastream_name'",
 				"encodingType": "'$sensor_encoding_type'",
 				"metadata": "'$sensor_metadata'"
 		   }}'
+echo $datastream > datastream
