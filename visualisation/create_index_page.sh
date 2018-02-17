@@ -11,8 +11,11 @@ echo '<!doctype html>
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
-   <script src="https://cdn.plot.ly/plotly-1.17.3.min.js"></script>
-   <script src="http://sdk.sensorup.com/sta-chart/sta-chart-0.0.5.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	<style>
 	h2 {
 		color: blue;
@@ -78,7 +81,8 @@ echo '<div id="mapid"></div>
 	</script>
 	<h1>Datastream</h1>' >> index.htm
 
-datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
+#datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
+datastream_query='{"@iot.count":3,"value":[{"@iot.id":1653976,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)","description":"Datastream for recording light intensity","name":"Light Intensity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"","name":"Unitless","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Thing"},{"@iot.id":1653973,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)","description":"Datastream for recording humidity","name":"Room Humidity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"%","name":"Percentage","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Thing"},{"@iot.id":1653970,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)","description":"Datastream for recording temperature","name":"Room Temperature","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"degC","name":"Degree Celcius","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Thing"}]}'
 number_of_datastream=`cat ../configuration.txt | grep datastream_name | wc -l`
 for (( i=1; i<=$number_of_datastream; i++ )); do
 		datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
@@ -120,17 +124,18 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				<li><span class="bold">Metadata: </span>'$sensor_metadata'</li>
 			</ul>' >> index.htm
 		
-		echo '<div id="datastream_'$datastream_id'"></div>
+		echo '<div id="datastream_'$datastream_id'" style="height: 300px; width: 100%; margin: auto;"></div>
 		<script>
-			stachart.generateChart({
-				'"'"'targetId'"'"': '"'"'datastream_'$datastream_id''"'"',
-			    '"'"'staBaseUrl'"'"': '"'"''$base_url''"'"',
-			    '"'"'datastreamId'"'"': '"'"''$datastream_id''"'"'
+			$(function() {
+				var sensorthingsHCDT = new SensorthingsHCDT('"'"$base_url"'"', {
+					'"'"dataStreamId"'"': ['$datastream_id']
+				});
+				var request = sensorthingsHCDT.request();
+				if (request.status == '"'"success"'"') {
+					sensorthingsHCDT.chart('"'"datastream_$datastream_id"'"', request);
+				}
 			});
 		 </script>' >> index.htm
-		
-		
-		
 done
 echo '</body>
 <html>' >> index.htm
