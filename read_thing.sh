@@ -6,7 +6,7 @@ thing_name=`cat configuration.txt | grep thing_name | cut -d "=" -f 2`
 echo "Thing's name is $thing_name."
 thing_description=`cat configuration.txt | grep thing_description | cut -d "=" -f 2`
 echo "Thing's description is $thing_description."
-thing='"name": "'$thing_name'",
+thing='{"name": "'$thing_name'",
       "description": "'$thing_description'"'
 
 # Get optional property(ies) from the configuration.txt file
@@ -26,9 +26,11 @@ if [[ $number_of_optional_property -gt 0 ]]; then
 		echo "Optional property description $i is $property_description."
 		optional_content=$optional_content'"'$property_name'": "'$property_description'"'
 		if (( i<$number_of_optional_property )); then
-			echo ","
+			optional_content=$optional_content,
 		fi
 	done
 	optional_content=$optional_content}
 	thing="$thing, $optional_content"
 fi
+thing=$thing}
+echo $thing > thing

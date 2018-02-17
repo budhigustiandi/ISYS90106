@@ -10,7 +10,7 @@ base_url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0
 
 # Thing ID (DO NOT CHANGE! It will only be generated automatically by the system)
 
-thing_id=1613215
+thing_id=1683828
 
 # Mandatory
 
@@ -36,8 +36,8 @@ location_status=static
 
 location_name=Home Laboratory
 location_description=Workspace at home built as a laboratory
-location_longitude=106.84610
-location_latitude=-6.159871
+location_longitude=106.84600
+location_latitude=-6.159912
 
 #####################
 # DATASTREAM ENTITY #

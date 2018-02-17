@@ -6,7 +6,7 @@ curl -X POST -H "Content-Type: application/json" -d "{
 \"phenomenonTime\": \"$time\",
 \"resultTime\": \"$time\",
 \"result\": \"$observation_result\",
-\"Datastream\":{\"@iot.id\":1653970}
+\"Datastream\":{\"@iot.id\":}
 }" "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations"
 time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`
 observation_result=`sudo python observation/read_humidity.py`
@@ -14,7 +14,7 @@ curl -X POST -H "Content-Type: application/json" -d "{
 \"phenomenonTime\": \"$time\",
 \"resultTime\": \"$time\",
 \"result\": \"$observation_result\",
-\"Datastream\":{\"@iot.id\":1653973}
+\"Datastream\":{\"@iot.id\":}
 }" "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations"
 time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`
 observation_result=`sudo python observation/read_light.py`
@@ -22,5 +22,5 @@ curl -X POST -H "Content-Type: application/json" -d "{
 \"phenomenonTime\": \"$time\",
 \"resultTime\": \"$time\",
 \"result\": \"$observation_result\",
-\"Datastream\":{\"@iot.id\":1653976}
+\"Datastream\":{\"@iot.id\":}
 }" "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations"

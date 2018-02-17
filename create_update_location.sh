@@ -32,7 +32,12 @@ if [[ "$location_status" == "static" ]]; then
 	echo "Location description is $location_description"
 	get_location
 	location_id=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Locations" | cut -d ":" -f 4 | cut -d "," -f 1`
-	curl -X PATCH -H "Content-Type: application/json" -d "$location" "$base_url/Locations($location_id)"
+	# Check whether this is a new location or not
+	if [[ "$location_id" == "" ]]; then
+		curl -XPOST -H "Content-type: application/json" -d "$location" "$base_url/Things($thing_id)/Locations"
+	else
+		curl -X PATCH -H "Content-Type: application/json" -d "$location" "$base_url/Locations($location_id)"
+	fi
 elif [[ "$location_status" == "dynamic" ]]; then
 	echo "Creating a new location..."
 	location_name="Mobile"
