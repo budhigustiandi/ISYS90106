@@ -13,6 +13,14 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="https://code.highcharts.com/stock/highstock.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.4/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/highcharts-more.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
 	<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	<style>
 	h2 {
@@ -59,7 +67,7 @@
 	</script>
 	<h1>Datastream</h1>
 <h2>Room Temperature</h2>
-		
+		<p><span class="bold">ID: </span>1653970</p>
 		<p><span class="bold">Description: </span>Datastream for recording temperature</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
 		<p><span class="bold">Unit of Measurement: </span>Degree Celcius</p>
@@ -81,17 +89,33 @@
 <div id="datastream_1653970" style="height: 300px; width: 100%; margin: auto;"></div>
 		<script>
 			$(function() {
-				var sensorthingsHCDT = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				var sensorthingsHCDT_1 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
 					'dataStreamId': [1653970]
 				});
-				var request = sensorthingsHCDT.request();
-				if (request.status == 'success') {
-					sensorthingsHCDT.chart('datastream_1653970', request);
+				var request_1 = sensorthingsHCDT_1.request();
+				if (request_1.status == 'success') {
+					sensorthingsHCDT_1.chart('datastream_1653970', request_1, false, 60000);
+					/* sensorthingsHCDT.chart(id, request, temporalFilter, interval);
+					sensorthingsHCDT.table(id, request, temporalFilter);
+					sensorthingsHCDT.gauge(id, request, type, min, max, interval);
+					sensorthingsHCDT.d3chart(id, request) */
+				}
+			});
+		</script>
+		<div id="datastreamGauge_1653970" style="height: 300px; width: 100%; margin: auto;"></div>
+		<script>
+			$(function() {
+				var sensorthingsHCDTGauge_1 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [1653970]
+				});
+				var requestGauge_1 = sensorthingsHCDTGauge_1.request();
+				if (requestGauge_1.status == 'success') {
+					sensorthingsHCDTGauge_1.gauge('datastreamGauge_1653970', requestGauge_1, 'speedometer', 0, 100, 60000);
 				}
 			});
 		 </script>
 <h2>Room Humidity</h2>
-		
+		<p><span class="bold">ID: </span>1653973</p>
 		<p><span class="bold">Description: </span>Datastream for recording humidity</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
 		<p><span class="bold">Unit of Measurement: </span>Percentage</p>
@@ -113,17 +137,33 @@
 <div id="datastream_1653973" style="height: 300px; width: 100%; margin: auto;"></div>
 		<script>
 			$(function() {
-				var sensorthingsHCDT = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				var sensorthingsHCDT_2 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
 					'dataStreamId': [1653973]
 				});
-				var request = sensorthingsHCDT.request();
-				if (request.status == 'success') {
-					sensorthingsHCDT.chart('datastream_1653973', request);
+				var request_2 = sensorthingsHCDT_2.request();
+				if (request_2.status == 'success') {
+					sensorthingsHCDT_2.chart('datastream_1653973', request_2, false, 60000);
+					/* sensorthingsHCDT.chart(id, request, temporalFilter, interval);
+					sensorthingsHCDT.table(id, request, temporalFilter);
+					sensorthingsHCDT.gauge(id, request, type, min, max, interval);
+					sensorthingsHCDT.d3chart(id, request) */
+				}
+			});
+		</script>
+		<div id="datastreamGauge_1653973" style="height: 300px; width: 100%; margin: auto;"></div>
+		<script>
+			$(function() {
+				var sensorthingsHCDTGauge_2 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [1653973]
+				});
+				var requestGauge_2 = sensorthingsHCDTGauge_2.request();
+				if (requestGauge_2.status == 'success') {
+					sensorthingsHCDTGauge_2.gauge('datastreamGauge_1653973', requestGauge_2, 'speedometer', 0, 100, 60000);
 				}
 			});
 		 </script>
 <h2>Room Light Intensity</h2>
-		
+		<p><span class="bold">ID: </span>1653976</p>
 		<p><span class="bold">Description: </span>Datastream for recording light intensity</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
 		<p><span class="bold">Unit of Measurement: </span>Lux</p>
@@ -145,12 +185,28 @@
 <div id="datastream_1653976" style="height: 300px; width: 100%; margin: auto;"></div>
 		<script>
 			$(function() {
-				var sensorthingsHCDT = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				var sensorthingsHCDT_3 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
 					'dataStreamId': [1653976]
 				});
-				var request = sensorthingsHCDT.request();
-				if (request.status == 'success') {
-					sensorthingsHCDT.chart('datastream_1653976', request);
+				var request_3 = sensorthingsHCDT_3.request();
+				if (request_3.status == 'success') {
+					sensorthingsHCDT_3.chart('datastream_1653976', request_3, false, 60000);
+					/* sensorthingsHCDT.chart(id, request, temporalFilter, interval);
+					sensorthingsHCDT.table(id, request, temporalFilter);
+					sensorthingsHCDT.gauge(id, request, type, min, max, interval);
+					sensorthingsHCDT.d3chart(id, request) */
+				}
+			});
+		</script>
+		<div id="datastreamGauge_1653976" style="height: 300px; width: 100%; margin: auto;"></div>
+		<script>
+			$(function() {
+				var sensorthingsHCDTGauge_3 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [1653976]
+				});
+				var requestGauge_3 = sensorthingsHCDTGauge_3.request();
+				if (requestGauge_3.status == 'success') {
+					sensorthingsHCDTGauge_3.gauge('datastreamGauge_1653976', requestGauge_3, 'speedometer', 0, 100, 60000);
 				}
 			});
 		 </script>

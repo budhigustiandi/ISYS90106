@@ -15,6 +15,14 @@ echo '<!doctype html>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="https://code.highcharts.com/stock/highstock.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.4/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/highcharts-more.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
 	<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	<style>
 	h2 {
@@ -32,6 +40,8 @@ echo '<!doctype html>
 
 base_url=`cat ../configuration.txt | grep base_url | cut -d "=" -f 2`
 thing_id=`cat ../configuration.txt | grep thing_id | cut -d "=" -f 2`
+observation_interval=`cat ../configuration.txt | grep observation_interval | cut -d "=" -f 2`
+(( observation_interval*=1000 ))
 
 echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>' >> index.htm
 
@@ -93,7 +103,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		unit_of_measurement_symbol=`cat ../configuration.txt | grep unit_of_measurement_symbol | head -$i | tail -1 | cut -d "=" -f 2`
 		unit_of_measurement_definition=`cat ../configuration.txt | grep unit_of_measurement_definition | head -$i | tail -1 | cut -d "=" -f 2`
 		echo '<h2>'$datastream_name'</h2>
-		
+		<p><span class="bold">ID: </span>'$datastream_id'</p>
 		<p><span class="bold">Description: </span>'$datastream_description'</p>
 		<p><span class="bold">Observation Type: </span>'$datastream_observation_type'</p>
 		<p><span class="bold">Unit of Measurement: </span>'$unit_of_measurement_name'</p>
@@ -127,12 +137,28 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		echo '<div id="datastream_'$datastream_id'" style="height: 300px; width: 100%; margin: auto;"></div>
 		<script>
 			$(function() {
-				var sensorthingsHCDT = new SensorthingsHCDT('"'"$base_url"'"', {
+				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
 					'"'"dataStreamId"'"': ['$datastream_id']
 				});
-				var request = sensorthingsHCDT.request();
-				if (request.status == '"'"success"'"') {
-					sensorthingsHCDT.chart('"'"datastream_$datastream_id"'"', request);
+				var request_'$i' = sensorthingsHCDT_'$i'.request();
+				if (request_'$i'.status == '"'"success"'"') {
+					sensorthingsHCDT_'$i'.chart('"'"datastream_$datastream_id"'"', request_'$i', false, '$observation_interval');
+					/* sensorthingsHCDT.chart(id, request, temporalFilter, interval);
+					sensorthingsHCDT.table(id, request, temporalFilter);
+					sensorthingsHCDT.gauge(id, request, type, min, max, interval);
+					sensorthingsHCDT.d3chart(id, request) */
+				}
+			});
+		</script>
+		<div id="datastreamGauge_'$datastream_id'" style="height: 300px; width: 100%; margin: auto;"></div>
+		<script>
+			$(function() {
+				var sensorthingsHCDTGauge_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+					'"'"dataStreamId"'"': ['$datastream_id']
+				});
+				var requestGauge_'$i' = sensorthingsHCDTGauge_'$i'.request();
+				if (requestGauge_'$i'.status == '"'"success"'"') {
+					sensorthingsHCDTGauge_'$i'.gauge('"'"datastreamGauge_$datastream_id"'"', requestGauge_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
 				}
 			});
 		 </script>' >> index.htm
