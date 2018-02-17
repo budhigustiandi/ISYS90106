@@ -8,8 +8,8 @@ echo ""
 
 function main_menu_prompt {
 	echo "Please select an option:"
-	echo "1) Run the thing.       3) Create a new thing."
-	echo "2) Update the thing.    4) Quit."
+	echo "1) Run the thing.       3) Create a new thing.      5) Reset datastream(s)."
+	echo "2) Update the thing.    4) Update datastream(s).    6) Quit."
 	echo ""
 }
 function sub_menu_prompt {
@@ -52,7 +52,7 @@ echo "# Thing has been registered to the server. #"
 echo "############################################"
 echo ""
 echo "Please select an option:"
-select main_menu in "Run the thing." "Update the thing." "Create a new thing." "Quit."; do
+select main_menu in "Run the thing." "Update the thing." "Create a new thing." "Update datastream(s)." "Reset datastream(s)." "Quit."; do
 	case $main_menu in
 		"Run the thing.")
 			observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
@@ -100,6 +100,13 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 						sub_menu_prompt;;
 				esac
 			done
+			main_menu_prompt;;
+		"Update datastream(s).")
+			bash update_datastream.sh
+			main_menu_prompt;;
+		"Reset datastream(s).")
+			bash delete_datastream.sh
+			bash create_datastream.sh
 			main_menu_prompt;;
 		"Quit.")
 			quit_prompt
