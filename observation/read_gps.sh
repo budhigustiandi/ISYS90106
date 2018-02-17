@@ -43,7 +43,7 @@ while read -r  line < /dev/serial0; do
 				latitude_degree=0
 			fi
 		fi
-		latitude_minute=`echo ${latitude_raw:3:8}/60 | bc -l`
+		latitude_minute=`echo ${latitude_raw:2:8}/60 | bc -l`
 		latitude=$latitude_degree$latitude_minute
 		latitude=${latitude:0:8}
 		latitude_position=`echo $line | cut -d "," -f 4`
