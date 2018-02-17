@@ -55,12 +55,13 @@ echo "Please select an option:"
 select main_menu in "Run the thing." "Update the thing." "Create a new thing." "Update datastream(s)." "Reset datastream(s)." "Quit."; do
 	case $main_menu in
 		"Run the thing.")
+			echo "Start observation..."
 			observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
 			second=$observation_interval
 			minute=0
 			hour=0
 			while (( $second >= 60 )); do
-				(( observation_interval-=60 ))
+				(( second-=60 ))
 				(( minute++ ))
 			done
 			while (( $minute >= 60 )); do

@@ -32,12 +32,12 @@ property_description=Budhi Gustiandi
 
 # If the thing will be put in a fixed location, choose static
 # If the thing will be used in mobile location, choose dynamic
-location_status=dynamic
+location_status=static
 
 location_name=Home Laboratory
 location_description=Workspace at home built as a laboratory
-location_longitude=106.84599
-location_latitude=-6.159867
+location_longitude=106.84610
+location_latitude=-6.159871
 
 #####################
 # DATASTREAM ENTITY #
