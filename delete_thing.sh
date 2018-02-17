@@ -1,6 +1,5 @@
 #!/bin/bash
 
-thing_url=`cat configuration.txt | grep thing_url | cut -d "=" -f 2`
-thing_id=$1
-url="$thing_url($thing_id)"
-curl -X DELETE -H "Content-Type: application/json" -H -d "$url"
+base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
+thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
+curl -X DELETE -H "Content-Type: application/json" -H -d "$base_url/Things($thing_id)"

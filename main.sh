@@ -6,11 +6,34 @@ echo "# Creator: Budhi Gustiandi                       #"
 echo "##################################################"
 echo ""
 
-function select_prompt {
+function main_menu_prompt {
 	echo "Please select an option:"
 	echo "1) Run the thing.       3) Create a new thing."
 	echo "2) Update the thing.    4) Quit."
 	echo ""
+}
+function sub_menu_prompt {
+	echo "#############################################"
+	echo "# Do you want to delete the existing thing? #"
+	echo "# 1) Yes    2) No    3) Back to main menu   #"
+	echo "#############################################"
+	echo ""
+}
+function quit_prompt {
+	echo "####################################"
+	echo "# Thank you for using the program. #"
+	echo "####################################"
+}
+function invalid_prompt {
+	echo "###################"
+	echo "# Invalid option. #"
+	echo "###################"
+	echo ""
+}
+function create_new_thing {
+	bash create_thing.sh
+	bash create_update_location.sh
+	bash create_datastream.sh
 }
 
 thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
@@ -20,9 +43,7 @@ while [[ "$thing_id" == "" ]]; do
 	echo "# Registering the thing to the server... #"
 	echo "##########################################"
 	echo ""
-	bash create_thing.sh
-	bash create_update_location.sh
-	bash create_datastream.sh
+	create_new_thing
 	thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 done
 
@@ -31,8 +52,8 @@ echo "# Thing has been registered to the server. #"
 echo "############################################"
 echo ""
 echo "Please select an option:"
-select option in "Run the thing." "Update the thing." "Create a new thing." "Quit."; do
-	case $option in
+select main_menu in "Run the thing." "Update the thing." "Create a new thing." "Quit."; do
+	case $main_menu in
 		"Run the thing.")
 			observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
 			second=$observation_interval
@@ -55,38 +76,35 @@ select option in "Run the thing." "Update the thing." "Create a new thing." "Qui
 			done
 			break;;
 		"Update the thing.")
-			#bash update_thing.sh
-			echo "###########################"
-			echo "# Thing has been updated. #"
-			echo "###########################"
-			echo ""
-			select_prompt;;
+			bash update_thing.sh
+			main_menu_prompt;;
 		"Create a new thing.")
-			break;;
-		"Quit.")
-			echo "####################################"
-			echo "# Thank you for using the program. #"
-			echo "####################################"
-			break;;
-		*)
-			echo "###################"
-			echo "# Invalid option. #"
-			echo "###################"
+			echo "#############################################"
+			echo "# Do you want to delete the existing thing? #"
+			echo "#############################################"
 			echo ""
-			select_prompt;;
+			select sub_menu in "Yes" "No" "Back to main menu"; do
+				case $sub_menu in
+					"Yes")
+						bash delete_thing.sh
+						create_new_thing
+						break;;
+					"No")
+						thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
+						echo "Previous thing ID is $thing_id" >> historical_thing.data
+						create_new_thing
+						break;;
+					"Back to main menu")
+						break;;
+					*)	invalid_prompt
+						sub_menu_prompt;;
+				esac
+			done
+			main_menu_prompt;;
+		"Quit.")
+			quit_prompt
+			break;;
+		*)	invalid_prompt
+			main_menu_prompt;;
 	esac
 done
-			# "Create a new one.") echo "do you want to delete the exising thing?"
-					     # select option_2 in "Yes" "No" "Quit"; do
-					     	# case $option_2 in
-							# "Yes") bash delete_thing.sh $thing_id
-						       	       # bash create_thing.sh
-							       # bash create_location.sh
-							       # bash create_datastream.sh
-						       	       # break;;
-							# "No") thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
-							      # echo "Previous Thing ID = $thing_id" >> log
-							      # bash create_thing.sh
-							      # bash create_location.sh
-							      # bash create_datastream.sh
-						              # break;;
