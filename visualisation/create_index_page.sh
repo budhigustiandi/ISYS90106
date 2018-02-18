@@ -1,40 +1,21 @@
 #!/bin/bash
 
+#########################
+# Create index.htm file #
+#########################
+
 echo '<!doctype html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Thing Name</title>
+	<title>Project RATIH Main Page</title>
+	<link rel="stylesheet" href="main.css">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-   crossorigin=""/>
+   crossorigin="">
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
-	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script src="https://code.highcharts.com/stock/highstock.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-    <script src="http://momentjs.com/downloads/moment.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.4/js/bootstrap-datetimepicker.min.js"></script>
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/highcharts-more.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
-	<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
-	<style>
-	h2 {
-		color: blue;
-	}
-	.bold {
-		font-weight: bold;
-	}
-	#mapid {
-		height: 300px;
-	}
-	</style>
 </head>
 <body>' > index.htm
 
@@ -92,7 +73,7 @@ echo '<div id="mapid"></div>
 	<h1>Datastream</h1>' >> index.htm
 
 #datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
-datastream_query='{"@iot.count":3,"value":[{"@iot.id":1653976,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)","description":"Datastream for recording light intensity","name":"Light Intensity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"","name":"Unitless","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653976)/Thing"},{"@iot.id":1653973,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)","description":"Datastream for recording humidity","name":"Room Humidity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"%","name":"Percentage","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#%"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653973)/Thing"},{"@iot.id":1653970,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)","description":"Datastream for recording temperature","name":"Room Temperature","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"degC","name":"Degree Celcius","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1653970)/Thing"}]}'
+datastream_query='{"@iot.count":3,"value":[{"@iot.id":1684201,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)","description":"Datastream for recording light intensity","name":"Room Light Intensity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"lx","name":"Lux","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Lux"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Thing"},{"@iot.id":1684198,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)","description":"Datastream for recording humidity","name":"Room Humidity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"%","name":"Percentage","definition":"1 part of 100"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Thing"},{"@iot.id":1684195,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)","description":"Datastream for recording temperature","name":"Room Temperature","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"degC","name":"Degree Celcius","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Thing"}]}'
 number_of_datastream=`cat ../configuration.txt | grep datastream_name | wc -l`
 for (( i=1; i<=$number_of_datastream; i++ )); do
 		datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
@@ -102,7 +83,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		unit_of_measurement_name=`cat ../configuration.txt | grep unit_of_measurement_name | head -$i | tail -1 | cut -d "=" -f 2`
 		unit_of_measurement_symbol=`cat ../configuration.txt | grep unit_of_measurement_symbol | head -$i | tail -1 | cut -d "=" -f 2`
 		unit_of_measurement_definition=`cat ../configuration.txt | grep unit_of_measurement_definition | head -$i | tail -1 | cut -d "=" -f 2`
-		echo '<h2>'$datastream_name'</h2>
+		echo '<h2>'$datastream_name' <span>show <a href="datastream_'$datastream_id'_chart.htm" target="_blank">chart</a> | <a href="#" target="_blank">table</a> | <a href="datastream_'$datastream_id'_gauge.htm" target="_blank">gauge</a></span></h2>
 		<p><span class="bold">ID: </span>'$datastream_id'</p>
 		<p><span class="bold">Description: </span>'$datastream_description'</p>
 		<p><span class="bold">Observation Type: </span>'$datastream_observation_type'</p>
@@ -133,35 +114,146 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				<li><span class="bold">Encoding Type: </span>'$sensor_encoding_type'</li>
 				<li><span class="bold">Metadata: </span>'$sensor_metadata'</li>
 			</ul>' >> index.htm
-		
-		echo '<div id="datastream_'$datastream_id'" style="height: 300px; width: 100%; margin: auto;"></div>
-		<script>
-			$(function() {
+done
+echo '</body>
+</html>' >> index.htm
+
+########################
+# Create main.css file #
+########################
+
+echo 'h2 {
+	color: blue;
+}
+.bold {
+	font-weight: bold;
+}
+#mapid {
+	height: 300px;
+}
+h2 span {
+	color: black;
+	font-weight: normal;
+	font-size: 0.75em;
+}' > main.css
+for (( i=1; i<=$number_of_datastream; i++ )); do
+	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	echo '	#datastream_'$datastream_id' {
+		min-width: 300px;
+		max-width: 555px;
+		height: 250px;
+		margin: 0 auto;
+	}' >> main.css
+done
+
+####################################################
+# Create individual chart page for each datastream #
+####################################################
+
+#########
+# Chart #
+#########
+
+for (( i=1; i<=$number_of_datastream; i++ )); do
+	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+	echo '<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>'$datastream_name'</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="https://code.highcharts.com/stock/highstock.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>' > datastream_${datastream_id}_chart.htm
+	echo '<div id="datastream_'$datastream_id'_chart"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+				'"'"dataStreamId"'"': ['$datastream_id']
+			});
+			var request_'$i' = sensorthingsHCDT_'$i'.request();
+			if (request_'$i'.status == '"'"success"'"') {
+				sensorthingsHCDT_'$i'.chart('"'"datastream_${datastream_id}_chart"'"', request_'$i', false, '$observation_interval');
+			}
+		});
+	</script>' >> datastream_${datastream_id}_chart.htm
+	echo '</body>
+	</html>' >> datastream_${datastream_id}_chart.htm
+done
+
+
+
+#########
+# Table #
+#########
+
+#########
+# Gauge #
+#########
+
+for (( i=1; i<=$number_of_datastream; i++ )); do
+	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+	echo '<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>'$datastream_name'</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-more.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>' > datastream_${datastream_id}_gauge.htm
+	echo '<p>Gauge type: <a id="speedometer" href="#">Speedometer</a> | <a id="solid" href="#">Solid</a></p>
+	<div id="datastream_'$datastream_id'_gauge"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+				'"'"dataStreamId"'"': ['$datastream_id']
+			});
+			var request_'$i' = sensorthingsHCDT_'$i'.request();
+			if (request_'$i'.status == '"'"success"'"') {
+				sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
+			}
+		});
+	</script>
+	<script>
+		const SPEEDOMETER = document.querySelector("#speedometer");
+		const SOLID = document.querySelector("#solid");
+		function speedometer() {
+			document.querySelector("body script").innerHTML=$(function() {
 				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
 					'"'"dataStreamId"'"': ['$datastream_id']
 				});
 				var request_'$i' = sensorthingsHCDT_'$i'.request();
 				if (request_'$i'.status == '"'"success"'"') {
-					sensorthingsHCDT_'$i'.chart('"'"datastream_$datastream_id"'"', request_'$i', false, '$observation_interval');
-					/* sensorthingsHCDT.chart(id, request, temporalFilter, interval);
-					sensorthingsHCDT.table(id, request, temporalFilter);
-					sensorthingsHCDT.gauge(id, request, type, min, max, interval);
-					sensorthingsHCDT.d3chart(id, request) */
+					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
 				}
 			});
-		</script>
-		<div id="datastreamGauge_'$datastream_id'" style="height: 300px; width: 100%; margin: auto;"></div>
-		<script>
-			$(function() {
-				var sensorthingsHCDTGauge_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+		}
+		function solid() {
+			document.querySelector("body script").innerHTML=$(function() {
+				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
 					'"'"dataStreamId"'"': ['$datastream_id']
 				});
-				var requestGauge_'$i' = sensorthingsHCDTGauge_'$i'.request();
-				if (requestGauge_'$i'.status == '"'"success"'"') {
-					sensorthingsHCDTGauge_'$i'.gauge('"'"datastreamGauge_$datastream_id"'"', requestGauge_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
+				var request_'$i' = sensorthingsHCDT_'$i'.request();
+				if (request_'$i'.status == '"'"success"'"') {
+					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"solid"'"', 0, 100, '$observation_interval');
 				}
 			});
-		 </script>' >> index.htm
+		}
+		SPEEDOMETER.onclick = speedometer;
+		SOLID.onclick = solid;
+	</script>' >> datastream_${datastream_id}_gauge.htm
+	echo '</body>
+	</html>' >> datastream_${datastream_id}_gauge.htm
 done
-echo '</body>
-<html>' >> index.htm

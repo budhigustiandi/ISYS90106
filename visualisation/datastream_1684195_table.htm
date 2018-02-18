@@ -1,0 +1,29 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Room Temperature</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+		<script src="http://momentjs.com/downloads/moment.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.4/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>
+<div id="datastream_1684195_table"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_1 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				'dataStreamId': [1684195]
+			});
+			var request_1 = sensorthingsHCDT_1.request();
+			if (request_1.status == 'success') {
+				sensorthingsHCDT_1.chart('datastream_1684195_table', request_1, 60000);
+			}
+		});
+	</script>
+</body>
+	</html>

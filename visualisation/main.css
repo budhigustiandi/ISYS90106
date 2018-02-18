@@ -1,0 +1,32 @@
+h2 {
+	color: blue;
+}
+.bold {
+	font-weight: bold;
+}
+#mapid {
+	height: 300px;
+}
+h2 span {
+	color: black;
+	font-weight: normal;
+	font-size: 0.75em;
+}
+	#datastream_1684195 {
+		min-width: 300px;
+		max-width: 555px;
+		height: 250px;
+		margin: 0 auto;
+	}
+	#datastream_1684198 {
+		min-width: 300px;
+		max-width: 555px;
+		height: 250px;
+		margin: 0 auto;
+	}
+	#datastream_1684201 {
+		min-width: 300px;
+		max-width: 555px;
+		height: 250px;
+		margin: 0 auto;
+	}
