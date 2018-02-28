@@ -8,6 +8,7 @@ thing=`cat thing`
 rm thing
 curl -X PATCH -H "Content-Type: application/json" -d "$thing" "$base_url/Things($thing_id)"
 
+echo ""
 echo "###########################"
 echo "# Thing has been updated. #"
 echo "###########################"

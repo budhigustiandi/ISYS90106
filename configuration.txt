@@ -32,12 +32,13 @@ property_description=Budhi Gustiandi
 
 # If the thing will be put in a fixed location, choose static
 # If the thing will be used in mobile location, choose dynamic
-location_status=static
+# If the thing does not use GPS receiver, choose no_gps
+location_status=no_gps
 
 location_name=Home Laboratory
 location_description=Workspace at home built as a laboratory
-location_longitude=106.84604
-location_latitude=-6.159886
+location_longitude=144.960282
+location_latitude=-37.808569
 
 #####################
 # DATASTREAM ENTITY #

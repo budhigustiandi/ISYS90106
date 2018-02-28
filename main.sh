@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo ""
 echo "##################################################"
 echo "# RAspberry-based automaTIc for sensortHings API #"
 echo "# Creator: Budhi Gustiandi                       #"
@@ -7,12 +8,14 @@ echo "##################################################"
 echo ""
 
 function main_menu_prompt {
+	echo ""
 	echo "Please select an option:"
 	echo "1) Run the thing.       3) Create a new thing.      5) Reset datastream(s)."
 	echo "2) Update the thing.    4) Update datastream(s).    6) Quit."
 	echo ""
 }
 function sub_menu_prompt {
+	echo ""
 	echo "#############################################"
 	echo "# Do you want to delete the existing thing? #"
 	echo "# 1) Yes    2) No    3) Back to main menu   #"
@@ -20,11 +23,14 @@ function sub_menu_prompt {
 	echo ""
 }
 function quit_prompt {
+	echo ""
 	echo "####################################"
 	echo "# Thank you for using the program. #"
 	echo "####################################"
+	echo ""
 }
 function invalid_prompt {
+	echo ""
 	echo "###################"
 	echo "# Invalid option. #"
 	echo "###################"
@@ -38,6 +44,7 @@ function create_new_thing {
 
 thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 while [[ "$thing_id" == "" ]]; do
+	echo ""
 	echo "##########################################"
 	echo "# Thing is not registered to the server. #"
 	echo "# Registering the thing to the server... #"
@@ -47,6 +54,7 @@ while [[ "$thing_id" == "" ]]; do
 	thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 done
 
+echo ""
 echo "############################################"
 echo "# Thing has been registered to the server. #"
 echo "############################################"
@@ -80,6 +88,7 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			bash update_thing.sh
 			main_menu_prompt;;
 		"Create a new thing.")
+			echo ""
 			echo "#############################################"
 			echo "# Do you want to delete the existing thing? #"
 			echo "#############################################"
@@ -88,7 +97,17 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 				case $sub_menu in
 					"Yes")
 						bash delete_thing.sh
+						echo ""
+						echo "###################################"
+						echo "# Existing thing has been deleted #"
+						echo "###################################"
+						echo ""
 						create_new_thing
+						echo ""
+						echo "##############################"
+						echo "# New thing has been created #"
+						echo "##############################"
+						echo ""
 						break;;
 					"No")
 						thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`

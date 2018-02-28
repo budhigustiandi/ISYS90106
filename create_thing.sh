@@ -2,6 +2,7 @@
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 
+echo ""
 echo "#########################"
 echo "# Create a new thing... #"
 echo "#########################"
@@ -44,6 +45,7 @@ mv temporary_configuration.txt configuration.txt
 chmod 666 configuration.txt
 chown pi:pi configuration.txt
 
+echo ""
 echo "############################################"
 echo "# configuration.txt file has been updated. #"
 echo "############################################"
