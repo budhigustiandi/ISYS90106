@@ -29,7 +29,7 @@ function get_location {
 if [[ "$location_status" == "no_gps" ]]; then
         echo "Using location from the configuration.txt file."
 	get_location
-        location_id=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Locations" | cut -d $
+        location_id=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Locations" | cut -d ":" -f 4 | cut -d "," -f 1`
         # Check whether this is a new location or not
         if [[ "$location_id" == "" ]]; then
                 curl -XPOST -H "Content-type: application/json" -d "$location" "$base_url/Things($thing_id)/Locations"
