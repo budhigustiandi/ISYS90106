@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Visualisation server parameters
+username=`cat configuration.txt | grep username | cut -d "=" -f 2`
+password=`cat configuration.txt | grep password | cut -d "=" -f 2`
+site=`cat configuration.txt | grep site | cut -d "=" -f 2`
+
 #########################
 # Create index.htm file #
 #########################
@@ -117,6 +122,10 @@ done
 echo '</body>
 </html>' >> visualisation/index.htm
 
+# Put index.htm file into the visualisation server
+
+lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/index.htm"
+
 ########################
 # Create main.css file #
 ########################
@@ -145,6 +154,10 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		margin: 0 auto;
 	}' >> visualisation/main.css
 done
+
+# Put main.css into the visualisation server
+
+lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/main.css"
 
 ####################################################
 # Create individual chart page for each datastream #
@@ -184,6 +197,10 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	</script>' >> visualisation/datastream_${datastream_id}_chart.htm
 	echo '</body>
 	</html>' >> visualisation/datastream_${datastream_id}_chart.htm
+
+	# Put each datastream_chart.htm to the visualisation server
+
+	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_chart.htm"
 done
 
 #########
@@ -254,4 +271,8 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	</script>' >> visualisation/datastream_${datastream_id}_gauge.htm
 	echo '</body>
 	</html>' >> visualisation/datastream_${datastream_id}_gauge.htm
+
+	# Put each datastream gauge file to the visualisation server
+
+	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_gauge.htm"
 done

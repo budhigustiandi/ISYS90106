@@ -141,3 +141,11 @@ observation_command=read_light.py
 ########################
 
 observation_interval=60
+
+##################################
+# VISUALISATION SERVER PARAMETER #
+##################################
+
+username=budhigustiandi
+password=budhigustiandi
+site=files.000webhost.com
