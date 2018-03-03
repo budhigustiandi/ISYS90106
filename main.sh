@@ -1,10 +1,10 @@
 #!/bin/bash
 
 echo ""
-echo "##################################################"
-echo "# RAspberry-based automaTIc for sensortHings API #"
-echo "# Creator: Budhi Gustiandi                       #"
-echo "##################################################"
+echo "#######################################################"
+echo "# RAspberry-based automaTIsation for sensortHings API #"
+echo "# Creator: Budhi Gustiandi                            #"
+echo "#######################################################"
 echo ""
 
 function main_menu_prompt {
@@ -40,6 +40,7 @@ function create_new_thing {
 	bash create_thing.sh
 	bash create_update_location.sh
 	bash create_datastream.sh
+	bash create_visualisation.sh
 }
 
 thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
@@ -86,6 +87,7 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			break;;
 		"Update the thing.")
 			bash update_thing.sh
+			bash create_visualisation.sh
 			main_menu_prompt;;
 		"Create a new thing.")
 			echo ""
@@ -123,10 +125,12 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			main_menu_prompt;;
 		"Update datastream(s).")
 			bash update_datastream.sh
+			bash create_visualisation.sh
 			main_menu_prompt;;
 		"Reset datastream(s).")
 			bash delete_datastream.sh
 			bash create_datastream.sh
+			bash create_visualisation.sh
 			main_menu_prompt;;
 		"Quit.")
 			quit_prompt

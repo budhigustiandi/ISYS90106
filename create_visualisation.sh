@@ -17,36 +17,36 @@ echo '<!doctype html>
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
 </head>
-<body>' > index.htm
+<body>' > visualisation/index.htm
 
-base_url=`cat ../configuration.txt | grep base_url | cut -d "=" -f 2`
-thing_id=`cat ../configuration.txt | grep thing_id | cut -d "=" -f 2`
-observation_interval=`cat ../configuration.txt | grep observation_interval | cut -d "=" -f 2`
+base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
+thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
+observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
 (( observation_interval*=1000 ))
 
-echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>' >> index.htm
+echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>' >> visualisation/index.htm
 
-thing_name=`cat ../configuration.txt | grep thing_name | cut -d "=" -f 2`
-thing_description=`cat ../configuration.txt | grep thing_description | cut -d "=" -f 2`
-	
+thing_name=`cat configuration.txt | grep thing_name | cut -d "=" -f 2`
+thing_description=`cat configuration.txt | grep thing_description | cut -d "=" -f 2`
+
 echo '<h1>Thing</h1>
 	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
 	<p><span class="bold">Name: </span>'$thing_name'</p>
 	<p><span class="bold">Description: </span>'$thing_description'</p>
 	<p><span class="bold">Properties: </span></p>
-	<ul>' >> index.htm
+	<ul>' >> visualisation/index.htm
 
-number_of_property=`cat ../configuration.txt | grep ^property_name | wc -l`
+number_of_property=`cat configuration.txt | grep ^property_name | wc -l`
 for (( i=1; i<=$number_of_property; i++ )); do
-	property_name=`cat ../configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
-	property_description=`cat ../configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
-	echo '<li><span class="bold">'$property_name': </span>'$property_description'</li>' >> index.htm
+	property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
+	property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
+	echo '<li><span class="bold">'$property_name': </span>'$property_description'</li>' >> visualisation/index.htm
 done
 
-location_name=`cat ../configuration.txt | grep location_name | cut -d "=" -f 2`
-location_description=`cat ../configuration.txt | grep location_description | cut -d "=" -f 2`
-location_longitude=`cat ../configuration.txt | grep location_longitude | cut -d "=" -f 2`
-location_latitude=`cat ../configuration.txt | grep location_latitude | cut -d "=" -f 2`
+location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
+location_description=`cat configuration.txt | grep location_description | cut -d "=" -f 2`
+location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
+location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
 
 echo '</ul>
 	<h1>Location</h1>
@@ -57,8 +57,8 @@ echo '</ul>
 	<ul>
 		<li><span class="bold">Longitude: </span>'$location_longitude'</li>
 		<li><span class="bold">Latitude: </span>'$location_latitude'</li>
-	</ul>' >> index.htm
-	
+	</ul>' >> visualisation/index.htm
+
 echo '<div id="mapid"></div>
 	<script>
 		var mymap = L.map('"'mapid'"').setView(['$location_latitude', '$location_longitude'], 17);
@@ -70,52 +70,52 @@ echo '<div id="mapid"></div>
 		var marker = L.marker(['$location_latitude', '$location_longitude']).addTo(mymap);
 		marker.bindPopup("Thing'"'"'s location.").openPopup();
 	</script>
-	<h1>Datastream</h1>' >> index.htm
+	<h1>Datastream</h1>' >> visualisation/index.htm
 
 datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
-number_of_datastream=`cat ../configuration.txt | grep datastream_name | wc -l`
+number_of_datastream=`cat configuration.txt | grep datastream_name | wc -l`
 for (( i=1; i<=$number_of_datastream; i++ )); do
 		datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-		datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
-		datastream_description=`cat ../configuration.txt | grep datastream_description | head -$i | tail -1 | cut -d "=" -f 2`
-		datastream_observation_type=`cat ../configuration.txt | grep datastream_observation_type | head -$i | tail -1 | cut -d "=" -f 2`
-		unit_of_measurement_name=`cat ../configuration.txt | grep unit_of_measurement_name | head -$i | tail -1 | cut -d "=" -f 2`
-		unit_of_measurement_symbol=`cat ../configuration.txt | grep unit_of_measurement_symbol | head -$i | tail -1 | cut -d "=" -f 2`
-		unit_of_measurement_definition=`cat ../configuration.txt | grep unit_of_measurement_definition | head -$i | tail -1 | cut -d "=" -f 2`
+		datastream_name=`cat configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+		datastream_description=`cat configuration.txt | grep datastream_description | head -$i | tail -1 | cut -d "=" -f 2`
+		datastream_observation_type=`cat configuration.txt | grep datastream_observation_type | head -$i | tail -1 | cut -d "=" -f 2`
+		unit_of_measurement_name=`cat configuration.txt | grep unit_of_measurement_name | head -$i | tail -1 | cut -d "=" -f 2`
+		unit_of_measurement_symbol=`cat configuration.txt | grep unit_of_measurement_symbol | head -$i | tail -1 | cut -d "=" -f 2`
+		unit_of_measurement_definition=`cat configuration.txt | grep unit_of_measurement_definition | head -$i | tail -1 | cut -d "=" -f 2`
 		echo '<h2>'$datastream_name' <span>show <a href="datastream_'$datastream_id'_chart.htm" target="_blank">chart</a> | <a href="#" target="_blank">table</a> | <a href="datastream_'$datastream_id'_gauge.htm" target="_blank">gauge</a></span></h2>
 		<p><span class="bold">ID: </span>'$datastream_id'</p>
 		<p><span class="bold">Description: </span>'$datastream_description'</p>
 		<p><span class="bold">Observation Type: </span>'$datastream_observation_type'</p>
 		<p><span class="bold">Unit of Measurement: </span>'$unit_of_measurement_name'</p>
 		<p><span class="bold">Symbol: </span>'$unit_of_measurement_symbol'</p>
-		<p><span class="bold">Definition: </span>'$unit_of_measurement_definition'</p>' >> index.htm
-		
-		observed_property_name=`cat ../configuration.txt | grep observed_property_name | head -$i | tail -1 | cut -d "=" -f 2`
-		observed_property_description=`cat ../configuration.txt | grep observed_property_description | head -$i | tail -1 | cut -d "=" -f 2`
-		observed_property_definition=`cat ../configuration.txt | grep observed_property_definition | head -$i | tail -1 | cut -d "=" -f 2`
-		
+		<p><span class="bold">Definition: </span>'$unit_of_measurement_definition'</p>' >> visualisation/index.htm
+
+		observed_property_name=`cat configuration.txt | grep observed_property_name | head -$i | tail -1 | cut -d "=" -f 2`
+		observed_property_description=`cat configuration.txt | grep observed_property_description | head -$i | tail -1 | cut -d "=" -f 2`
+		observed_property_definition=`cat configuration.txt | grep observed_property_definition | head -$i | tail -1 | cut -d "=" -f 2`
+
 		echo '<h3>Observed Property</h3>
 			<ul>
 				<li><span class="bold">Name: </span>'$observed_property_name'</li>
 				<li><span class="bold">Description: </span>'$observed_property_description'</li>
 				<li><span class="bold">Definition: </span>'$observed_property_definition'</li>
-			</ul>' >> index.htm
-			
-		sensor_name=`cat ../configuration.txt | grep sensor_name | head -$i | tail -1 | cut -d "=" -f 2`
-		sensor_description=`cat ../configuration.txt | grep sensor_description | head -$i | tail -1 | cut -d "=" -f 2`
-		sensor_encoding_type=`cat ../configuration.txt | grep sensor_encoding_type | head -$i | tail -1 | cut -d "=" -f 2`
-		sensor_metadata=`cat ../configuration.txt | grep sensor_metadata | head -$i | tail -1 | cut -d "=" -f 2`
-		
+			</ul>' >> visualisation/index.htm
+
+		sensor_name=`cat configuration.txt | grep sensor_name | head -$i | tail -1 | cut -d "=" -f 2`
+		sensor_description=`cat configuration.txt | grep sensor_description | head -$i | tail -1 | cut -d "=" -f 2`
+		sensor_encoding_type=`cat configuration.txt | grep sensor_encoding_type | head -$i | tail -1 | cut -d "=" -f 2`
+		sensor_metadata=`cat configuration.txt | grep sensor_metadata | head -$i | tail -1 | cut -d "=" -f 2`
+
 		echo '<h3>Sensor</h3>
 			<ul>
 				<li><span class="bold">Name: </span>'$sensor_name'</li>
 				<li><span class="bold">Description: </span>'$sensor_description'</li>
 				<li><span class="bold">Encoding Type: </span>'$sensor_encoding_type'</li>
 				<li><span class="bold">Metadata: </span>'$sensor_metadata'</li>
-			</ul>' >> index.htm
+			</ul>' >> visualisation/index.htm
 done
 echo '</body>
-</html>' >> index.htm
+</html>' >> visualisation/index.htm
 
 ########################
 # Create main.css file #
@@ -134,7 +134,8 @@ h2 span {
 	color: black;
 	font-weight: normal;
 	font-size: 0.75em;
-}' > main.css
+}' > visualisation/main.css
+
 for (( i=1; i<=$number_of_datastream; i++ )); do
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	echo '	#datastream_'$datastream_id' {
@@ -142,7 +143,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		max-width: 555px;
 		height: 250px;
 		margin: 0 auto;
-	}' >> main.css
+	}' >> visualisation/main.css
 done
 
 ####################################################
@@ -155,7 +156,7 @@ done
 
 for (( i=1; i<=$number_of_datastream; i++ )); do
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-	datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+	datastream_name=`cat configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
 	echo '<!doctype html>
 	<html lang="en">
 	<head>
@@ -168,7 +169,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	</head>
-	<body>' > datastream_${datastream_id}_chart.htm
+	<body>' > visualisation/datastream_${datastream_id}_chart.htm
 	echo '<div id="datastream_'$datastream_id'_chart"></div>
 	<script>
 		$(function() {
@@ -180,12 +181,10 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				sensorthingsHCDT_'$i'.chart('"'"datastream_${datastream_id}_chart"'"', request_'$i', false, '$observation_interval');
 			}
 		});
-	</script>' >> datastream_${datastream_id}_chart.htm
+	</script>' >> visualisation/datastream_${datastream_id}_chart.htm
 	echo '</body>
-	</html>' >> datastream_${datastream_id}_chart.htm
+	</html>' >> visualisation/datastream_${datastream_id}_chart.htm
 done
-
-
 
 #########
 # Table #
@@ -197,7 +196,7 @@ done
 
 for (( i=1; i<=$number_of_datastream; i++ )); do
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-	datastream_name=`cat ../configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+	datastream_name=`cat configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
 	echo '<!doctype html>
 	<html lang="en">
 	<head>
@@ -211,7 +210,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	</head>
-	<body>' > datastream_${datastream_id}_gauge.htm
+	<body>' > visualisation/datastream_${datastream_id}_gauge.htm
 	echo '<p>Gauge type: <a id="speedometer" href="#">Speedometer</a> | <a id="solid" href="#">Solid</a></p>
 	<div id="datastream_'$datastream_id'_gauge"></div>
 	<script>
@@ -252,7 +251,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		}
 		SPEEDOMETER.onclick = speedometer;
 		SOLID.onclick = solid;
-	</script>' >> datastream_${datastream_id}_gauge.htm
+	</script>' >> visualisation/datastream_${datastream_id}_gauge.htm
 	echo '</body>
-	</html>' >> datastream_${datastream_id}_gauge.htm
+	</html>' >> visualisation/datastream_${datastream_id}_gauge.htm
 done
