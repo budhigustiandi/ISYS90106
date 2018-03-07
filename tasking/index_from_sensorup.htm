@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="sensorup">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="shortcut icon" href="http://dashboard-demo.sensorup.com/#/home/img/SensorUp_FaviCon_16by16.png">
+	<title page-title></title>
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/bootstrap.min.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/font-awesome/css/font-awesome.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/animate.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/style.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/nv.d3.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/js/leaflet/leaflet.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/js/leaflet-draw/leaflet.draw.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/js/leaflet-markercluster/MarkerCluster.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/js/leaflet-markercluster/MarkerCluster.Default.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/angular-toastr.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/iziToast.min.css" rel="stylesheet">
+	<link href="http://dashboard-demo.sensorup.com/#/home/css/sensorup.css" rel="stylesheet">
+</head>
+<body ng-controller="MainCtrl as main">
+	<div id="wrapper">
+		<div ng-include="'http://dashboard-demo.sensorup.com/#/home/views/common/navigation.html'"></div>
+		<div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+			<div ui-view></div>
+			<div ng-include="'http://dashboard-demo.sensorup.com/#/home/views/common/footer.html'"></div>
+		</div>
+	</div>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/es6-shim.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/jquery/jquery-2.1.1.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/plugins/jquery-ui/jquery-ui.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/bootstrap/bootstrap.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/plugins/pace/pace.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/inspinia.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/angular/angular.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/ui-router/angular-ui-router.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/bootstrap/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angulartics.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angulartics-google-analytics.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){
+			i['GoogleAnalyticsObject']=r;
+			i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)
+			},
+			i[r].l=1*new Date();
+			a=s.createElement(o),m=s.getElementsByTagName(o)[0];
+			a.async=1;
+			a.src=g;
+			m.parentNode.insertBefore(a,m)
+		})
+		(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-71291241-1', 'auto');
+	</script>
+	<script src="http://dashboard-demo.sensorup.com/js/lodash/lodash.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/underscore.string/underscore.string.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/sprintf/sprintf.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/angular-local-storage/angular-local-storage.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/d3/d3.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/nvd3/nv.d3.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/angular-nvd3/angular-nvd3.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/moment/moment.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/angular-moment/angular-moment.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/leaflet/leaflet.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/leaflet-draw/leaflet.draw.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/leaflet-markercluster/leaflet.markercluster.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angular-uuid.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angular-clipboard.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/jquery.sparkline.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angular-simple-logger.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/ui-leaflet.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/ui-leaflet-draw.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/mqttws31.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/wellknown.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/vivus.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/angular-toastr.tpls.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/URI.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/misc/iziToast.min.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/app.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/config.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/directives.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/filters.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/helpers.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/services/sensor-things.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/services/user-service.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/services/mop-service.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/main.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/link.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/home.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/things.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/thing.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/locations.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/location.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/sensors.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/sensor.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/observations.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/observation.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/observed-properties.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/observed-property.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/fois.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/foi.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/datastreams.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/datastream.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/historical-locations.js"></script> 
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/historical-location.js"></script> 
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/settings.js"></script> 
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/session-start.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/sign-in-failed.js"></script>
+	<script src="http://dashboard-demo.sensorup.com/js/controllers/generators.js"></script> 
+	<script src="http://dashboard-demo.sensorup.com/js/directives/link-directive.js"></script> 
+</body>
+</html>

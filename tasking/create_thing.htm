@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>OGC SensorThings API - Create Thing</title>
+	<link rel="stylesheet" href="tasking.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Create Thing</h1>
+	<h2>Mandatory</h2>
+	<p>Name:</p>
+	<textarea id="thing_name" rows="1"></textarea>
+	<p>Description:</p>
+	<textarea id="thing_description" rows="1"></textarea>
+	<h2>Optional</h2>
+	<p>Property(ies) (JSON):</p>
+	<textarea id="thing_property" rows="3"></textarea>
+	<button id="create_thing" onclick="createThing();">Create Thing</button>
+	<script>
+		function createThing(){
+			var thing_name = document.querySelector("#thing_name").value;
+			var thing_description = document.querySelector("#thing_description").value;
+			var thing_property = document.querySelector("#thing_property").value;
+			console.log(thing_property);
+			var thing_property = "\"properties\": " + thing_property;
+			console.log(thing_property);
+			var thing = "{\"name\": " + thing_name + ", \"description\": " + thing_description + ", " + thing_property + "}";
+			console.log(thing);
+			//var thing = JSON.stringify({
+			//	"name": thing_name,
+			//	"description": thing_description,
+			//	thing_property_escaped
+			//});
+			
+			$.ajax({
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things",
+				type: "POST",
+				data: thing,
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					console.log(data);  
+				},
+				error: function(response, status){
+					console.log(response);
+					console.log(status);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

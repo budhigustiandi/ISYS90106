@@ -228,7 +228,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	</head>
 	<body>' > visualisation/datastream_${datastream_id}_gauge.htm
-	echo '<p>Gauge type: <a id="speedometer" href="#">Speedometer</a> | <a id="solid" href="#">Solid</a></p>
+	echo '<p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
 	<div id="datastream_'$datastream_id'_gauge"></div>
 	<script>
 		$(function() {
@@ -266,8 +266,6 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				}
 			});
 		}
-		SPEEDOMETER.onclick = speedometer;
-		SOLID.onclick = solid;
 	</script>' >> visualisation/datastream_${datastream_id}_gauge.htm
 	echo '</body>
 	</html>' >> visualisation/datastream_${datastream_id}_gauge.htm
