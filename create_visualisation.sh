@@ -54,6 +54,7 @@ location_longitude=`cat configuration.txt | grep location_longitude | cut -d "="
 location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
 
 echo '</ul>
+	<a href="update_thing.htm" target="_blank"><button>Update Thing</button></a>
 	<h1>Location</h1>
 	<p><span class="bold">Name: </span>'$location_name'</p>
 	<p><span class="bold">Description: </span>'$location_description'</p>
@@ -154,6 +155,10 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		margin: 0 auto;
 	}' >> visualisation/main.css
 done
+
+echo 'textarea {
+	width: 100%;
+}' >> visualisation/main.css
 
 # Put main.css into the visualisation server
 
@@ -274,3 +279,90 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 
 	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_gauge.htm"
 done
+
+################################
+# Create update_thing.htm page #
+################################
+
+echo '<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Project RATIH - Update Thing</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Update Thing</h1>
+	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
+	<p class="bold">name</p>
+	<textarea id="thing_name" rows="1" placeholder="String">'$thing_name'</textarea>
+	<p class="bold">description</p>
+	<textarea id="thing_description" rows="1" placeholder="String">'$thing_description'</textarea>
+	<p class="bold">properties</p>
+	<textarea id="thing_property" rows="3" placeholder="JSON">{' > visualisation/update_thing.htm
+
+number_of_property=`cat configuration.txt | grep ^property_name | wc -l`
+for (( i=1; i<=$number_of_property; i++ )); do
+	property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
+	property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
+	echo '"'$property_name'": "'$property_description'"' >> visualisation/update_thing.htm
+	if (( i<$number_of_property )); then
+		echo -n ', ' >> visualisation/update_thing.htm
+	fi
+done
+	
+echo '}</textarea>
+	<button id="update_thing" onclick="updateThing();">Update Thing</button>
+	<script>
+		function updateThing(){
+			var thing_id = '$thing_id';
+			var thing_name = document.querySelector("#thing_name").value;
+			var thing_description = document.querySelector("#thing_description").value;
+			var thing_property = document.querySelector("#thing_property").value;
+			var thing = '"'"'{ '"'"';
+			if (thing_name !== "") {
+				thing = thing + '"'"'"name": "'"'"' + thing_name + '"'"'"'"'"';
+			}
+			if (thing_description !== "") {
+				if (thing_name !== "") {
+					thing = thing + '"'"', '"'"';
+				}
+				thing = thing + '"'"'"description": "'"'"' + thing_description + '"'"'"'"'"';
+			}
+			if (thing_property !== "") {
+				if ((thing_name !== "") || (thing_description !== "")) {
+					thing = thing + '"'"', '"'"';
+				}
+				thing = thing + '"'"'"properties": "'"'"' + thing_property;
+			}
+			thing = thing + '"'"' }'"'"';
+			console.log("Thing Name: " + thing_name);
+			console.log("Thing Description: " + thing_description);
+			console.log("Thing Property: " + thing_property);
+			console.log("Thing: " + thing);
+			$.ajax({
+				url: "'$base_url'/Things('$thing_id')",
+				type: "PATCH",
+				data: thing,
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					console.log(data);
+					var user_info_node = document.createElement("p");
+					var user_info_text = document.createTextNode("Thing has been updated!");
+					user_info_node.appendChild(user_info_text);
+					document.querySelector("body").appendChild(user_info_node);
+				},
+				error: function(response, status){
+					console.log(response);
+					console.log(status);
+				}
+			});
+		}
+	</script>
+</body>
+</html>' >> visualisation/update_thing.htm
+
+# Put update_thing.htm file to the visualisation server
+
+lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/update_thing.htm"
