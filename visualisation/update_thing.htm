@@ -15,9 +15,8 @@
 	<textarea id="thing_description" rows="1" placeholder="String">Test device used to implement RAspberry-based automaTIon for sensortHings API</textarea>
 	<p class="bold">properties</p>
 	<textarea id="thing_property" rows="3" placeholder="JSON">{
-"Hardware Used": "Raspberry Pi 3"
-, "Creator": "Budhi Gustiandi"
-}</textarea>
+"Hardware Used": "Raspberry Pi 3", 
+"Creator": "Budhi Gustiandi"}</textarea>
 	<button id="update_thing" onclick="updateThing();">Update Thing</button>
 	<script>
 		function updateThing(){
@@ -39,7 +38,7 @@
 				if ((thing_name !== "") || (thing_description !== "")) {
 					thing = thing + ', ';
 				}
-				thing = thing + '"properties": "' + thing_property;
+				thing = thing + '"properties": ' + thing_property;
 			}
 			thing = thing + ' }';
 			console.log("Thing Name: " + thing_name);

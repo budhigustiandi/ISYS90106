@@ -12,7 +12,7 @@
 		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
 	</head>
 	<body>
-<p>Gauge type: <a id="speedometer" href="#">Speedometer</a> | <a id="solid" href="#">Solid</a></p>
+<p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
 	<div id="datastream_1684201_gauge"></div>
 	<script>
 		$(function() {
@@ -50,8 +50,6 @@
 				}
 			});
 		}
-		SPEEDOMETER.onclick = speedometer;
-		SOLID.onclick = solid;
 	</script>
 </body>
 	</html>

@@ -306,12 +306,13 @@ number_of_property=`cat configuration.txt | grep ^property_name | wc -l`
 for (( i=1; i<=$number_of_property; i++ )); do
 	property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
 	property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
-	echo '"'$property_name'": "'$property_description'"' >> visualisation/update_thing.htm
+	echo -n '"'$property_name'": "'$property_description'"' >> visualisation/update_thing.htm
 	if (( i<$number_of_property )); then
-		echo -n ', ' >> visualisation/update_thing.htm
+		echo ', ' >> visualisation/update_thing.htm
 	fi
 done
-	
+
+echo ''
 echo '}</textarea>
 	<button id="update_thing" onclick="updateThing();">Update Thing</button>
 	<script>
@@ -334,7 +335,7 @@ echo '}</textarea>
 				if ((thing_name !== "") || (thing_description !== "")) {
 					thing = thing + '"'"', '"'"';
 				}
-				thing = thing + '"'"'"properties": "'"'"' + thing_property;
+				thing = thing + '"'"'"properties": '"'"' + thing_property;
 			}
 			thing = thing + '"'"' }'"'"';
 			console.log("Thing Name: " + thing_name);
