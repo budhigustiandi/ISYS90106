@@ -14,54 +14,67 @@
 </head>
 <body>
 <p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
-<h1>Thing</h1>
+	<h1>Thing</h1>
 	<p><span class="bold">ID in the server: </span>1684190</p>
 	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
 	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
 	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>
-<a href="read_update_thing.htm"><button>Update Thing</button></a>
+	<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
-	<p><span class="bold">Name: </span>Home Laboratory</p>
-	<p><span class="bold">Description: </span>Workspace at home built as a laboratory</p>
-	<p><span class="bold">Encoding Type: </span>"application/vnd.geo+json"</p>
+	<p><span class="bold">Name: </span><span id="location_name"></span></p>
+	<p><span class="bold">Description: </span><span id="location_description"></span></p>
+	<p><span class="bold">Encoding: </span><span id="location_encoding"></span></p>
+	<p><span class="bold">Type: </span><span id="location_type"></span></p>
 	<p><span class="bold">Location: </span></p>
 	<ul>
-		<li><span class="bold">Longitude: </span>144.960282</li>
-		<li><span class="bold">Latitude: </span>-37.808569</li>
+		<li><span class="bold">Longitude: </span><span id="location_longitude"></span></li>
+		<li><span class="bold">Latitude: </span><span id="location_latitude"></li>
 	</ul>
-<div id="mapid"></div>
+	<div id="mapid"></div>
 	<script>
-		// Read the data in JSON format from the SensorUp server then update the page based on the data
-		var thing_id = 1684190;
-		console.log("Thing ID: " + thing_id);
 		var thing = $.ajax({
-			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams",
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			success: function(data){
-				var thing_name = thing.responseJSON.name;
-				console.log("Thing Name: " + thing_name);
-				document.querySelector("#thing_name").textContent = thing_name;
-				var thing_description = thing.responseJSON.description;
-				console.log("Thing Description: " + thing_description);
-				document.querySelector("#thing_description").textContent = thing_description;
-				var thing_property = JSON.stringify(thing.responseJSON.properties);
-				console.log("Thing Properties: " + thing_property);
-				document.querySelector("#thing_property").textContent = thing_property;
+				console.log("Thing Name: " + thing.responseJSON.name);
+				document.querySelector("#thing_name").textContent = thing.responseJSON.name;
+				console.log("Thing Description: " + thing.responseJSON.description);
+				document.querySelector("#thing_description").textContent = thing.responseJSON.description;
+				console.log("Thing Properties: " + JSON.stringify(thing.responseJSON.properties));
+				document.querySelector("#thing_property").textContent = JSON.stringify(thing.responseJSON.properties);
+				var location = JSON.stringify(thing.responseJSON.Locations);
+				location = location.slice(1,location.length-1);
+				console.log("Location: " + location);
+				location = JSON.parse(location);
+				console.log("Location Name: " + location.name);
+				document.querySelector("#location_name").textContent = location.name;
+				console.log("Location Description: " + location.description);
+				document.querySelector("#location_description").textContent = location.description;
+				console.log("Location Encoding: " + location.encodingType);
+				document.querySelector("#location_encoding").textContent = location.encodingType;
+				console.log("Location Type: " + location.location.type);
+				document.querySelector("#location_type").textContent = location.location.type;
+				var location_longitude = location.location.coordinates[0];
+				console.log("Location Longitude: " + location_longitude);
+				document.querySelector("#location_longitude").textContent = location_longitude;
+				var location_latitude = location.location.coordinates[1];
+				console.log("Location Latitude: " + location_latitude);
+				document.querySelector("#location_latitude").textContent = location_latitude;
+				var mymap = L.map('mapid').setView([location_latitude, location_longitude], 17);
+				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+					maxZoom: 18,
+					id: 'mapbox.streets'
+				}).addTo(mymap);
+				var marker = L.marker([location_latitude, location_longitude]).addTo(mymap);
+				marker.bindPopup("Thing's location.").openPopup();
 			},
 			error: function(response, status){
 				console.log(response);
 				console.log(status);
 			}
 		});
-		var mymap = L.map('mapid').setView([-37.808569, 144.960282], 17);
-		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			maxZoom: 18,
-			id: 'mapbox.streets'
-		}).addTo(mymap);
-		var marker = L.marker([-37.808569, 144.960282]).addTo(mymap);
-		marker.bindPopup("Thing's location.").openPopup();
 	</script>
 	<h1>Datastream</h1>
 <h2>Room Temperature <span>show <a href="datastream_1684195_chart.htm" target="_blank">chart</a> | <a href="datastream_1684195_gauge.htm" target="_blank">gauge</a></span></h2>

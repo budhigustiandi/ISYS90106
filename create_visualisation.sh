@@ -30,63 +30,68 @@ thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
 (( observation_interval*=1000 ))
 
-echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>' >> visualisation/index.htm
-
-echo '<h1>Thing</h1>
+echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
+	<h1>Thing</h1>
 	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
 	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
 	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
-	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>' >> visualisation/index.htm
-
-location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
-location_description=`cat configuration.txt | grep location_description | cut -d "=" -f 2`
-location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
-location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
-
-echo '<a href="read_update_thing.htm"><button>Update Thing</button></a>
+	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>
+	<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
-	<p><span class="bold">Name: </span>'$location_name'</p>
-	<p><span class="bold">Description: </span>'$location_description'</p>
-	<p><span class="bold">Encoding Type: </span>"application/vnd.geo+json"</p>
+	<p><span class="bold">Name: </span><span id="location_name"></span></p>
+	<p><span class="bold">Description: </span><span id="location_description"></span></p>
+	<p><span class="bold">Encoding: </span><span id="location_encoding"></span></p>
+	<p><span class="bold">Type: </span><span id="location_type"></span></p>
 	<p><span class="bold">Location: </span></p>
 	<ul>
-		<li><span class="bold">Longitude: </span>'$location_longitude'</li>
-		<li><span class="bold">Latitude: </span>'$location_latitude'</li>
-	</ul>' >> visualisation/index.htm
-
-echo '<div id="mapid"></div>
+		<li><span class="bold">Longitude: </span><span id="location_longitude"></span></li>
+		<li><span class="bold">Latitude: </span><span id="location_latitude"></li>
+	</ul>
+	<div id="mapid"></div>
 	<script>
-		// Read the data in JSON format from the SensorUp server then update the page based on the data
-		var thing_id = '$thing_id';
-		console.log("Thing ID: " + thing_id);
 		var thing = $.ajax({
-			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+			url: "'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams",
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			success: function(data){
-				var thing_name = thing.responseJSON.name;
-				console.log("Thing Name: " + thing_name);
-				document.querySelector("#thing_name").textContent = thing_name;
-				var thing_description = thing.responseJSON.description;
-				console.log("Thing Description: " + thing_description);
-				document.querySelector("#thing_description").textContent = thing_description;
-				var thing_property = JSON.stringify(thing.responseJSON.properties);
-				console.log("Thing Properties: " + thing_property);
-				document.querySelector("#thing_property").textContent = thing_property;
+				console.log("Thing Name: " + thing.responseJSON.name);
+				document.querySelector("#thing_name").textContent = thing.responseJSON.name;
+				console.log("Thing Description: " + thing.responseJSON.description);
+				document.querySelector("#thing_description").textContent = thing.responseJSON.description;
+				console.log("Thing Properties: " + JSON.stringify(thing.responseJSON.properties));
+				document.querySelector("#thing_property").textContent = JSON.stringify(thing.responseJSON.properties);
+				var location = JSON.stringify(thing.responseJSON.Locations);
+				location = location.slice(1,location.length-1);
+				console.log("Location: " + location);
+				location = JSON.parse(location);
+				console.log("Location Name: " + location.name);
+				document.querySelector("#location_name").textContent = location.name;
+				console.log("Location Description: " + location.description);
+				document.querySelector("#location_description").textContent = location.description;
+				console.log("Location Encoding: " + location.encodingType);
+				document.querySelector("#location_encoding").textContent = location.encodingType;
+				console.log("Location Type: " + location.location.type);
+				document.querySelector("#location_type").textContent = location.location.type;
+				var location_longitude = location.location.coordinates[0];
+				console.log("Location Longitude: " + location_longitude);
+				document.querySelector("#location_longitude").textContent = location_longitude;
+				var location_latitude = location.location.coordinates[1];
+				console.log("Location Latitude: " + location_latitude);
+				document.querySelector("#location_latitude").textContent = location_latitude;
+				var mymap = L.map('"'"'mapid'"'"').setView([location_latitude, location_longitude], 17);
+				L.tileLayer('"'"'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'"'"', {
+					attribution: '"'"'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'"'"',
+					maxZoom: 18,
+					id: '"'"'mapbox.streets'"'"'
+				}).addTo(mymap);
+				var marker = L.marker([location_latitude, location_longitude]).addTo(mymap);
+				marker.bindPopup("Thing'"'"'s location.").openPopup();
 			},
 			error: function(response, status){
 				console.log(response);
 				console.log(status);
 			}
 		});
-		var mymap = L.map('"'mapid'"').setView(['$location_latitude', '$location_longitude'], 17);
-		L.tileLayer('"'"'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'"'"', {
-			attribution: '"'"'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'"'"',
-			maxZoom: 18,
-			id: '"'"'mapbox.streets'"'"'
-		}).addTo(mymap);
-		var marker = L.marker(['$location_latitude', '$location_longitude']).addTo(mymap);
-		marker.bindPopup("Thing'"'"'s location.").openPopup();
 	</script>
 	<h1>Datastream</h1>' >> visualisation/index.htm
 
