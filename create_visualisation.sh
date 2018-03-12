@@ -54,7 +54,7 @@ location_longitude=`cat configuration.txt | grep location_longitude | cut -d "="
 location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
 
 echo '</ul>
-	<a href="update_thing.htm" target="_blank"><button>Update Thing</button></a>
+	<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
 	<p><span class="bold">Name: </span>'$location_name'</p>
 	<p><span class="bold">Description: </span>'$location_description'</p>
@@ -78,7 +78,8 @@ echo '<div id="mapid"></div>
 	</script>
 	<h1>Datastream</h1>' >> visualisation/index.htm
 
-datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
+#datastream_query=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Datastreams"`
+datastream_query='{"@iot.count":3,"value":[{"@iot.id":1684201,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)","description":"Datastream for recording light intensity","name":"Room Light Intensity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"lx","name":"Lux","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Lux"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684201)/Thing"},{"@iot.id":1684198,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)","description":"Datastream for recording humidity","name":"Room Humidity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"%","name":"Percentage","definition":"1 part of 100"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684198)/Thing"},{"@iot.id":1684195,"@iot.selfLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)","description":"Datastream for recording temperature","name":"Room Temperature","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"symbol":"degC","name":"Degree Celcius","definition":"http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius"},"Observations@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Observations","ObservedProperty@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/ObservedProperty","Sensor@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Sensor","Thing@iot.navigationLink":"http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(1684195)/Thing"}]}'
 number_of_datastream=`cat configuration.txt | grep datastream_name | wc -l`
 for (( i=1; i<=$number_of_datastream; i++ )); do
 		datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
@@ -88,7 +89,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		unit_of_measurement_name=`cat configuration.txt | grep unit_of_measurement_name | head -$i | tail -1 | cut -d "=" -f 2`
 		unit_of_measurement_symbol=`cat configuration.txt | grep unit_of_measurement_symbol | head -$i | tail -1 | cut -d "=" -f 2`
 		unit_of_measurement_definition=`cat configuration.txt | grep unit_of_measurement_definition | head -$i | tail -1 | cut -d "=" -f 2`
-		echo '<h2>'$datastream_name' <span>show <a href="datastream_'$datastream_id'_chart.htm" target="_blank">chart</a> | <a href="#" target="_blank">table</a> | <a href="datastream_'$datastream_id'_gauge.htm" target="_blank">gauge</a></span></h2>
+		echo '<h2>'$datastream_name' <span>show <a href="datastream_'$datastream_id'_chart.htm" target="_blank">chart</a> | <a href="datastream_'$datastream_id'_gauge.htm" target="_blank">gauge</a></span></h2>
 		<p><span class="bold">ID: </span>'$datastream_id'</p>
 		<p><span class="bold">Description: </span>'$datastream_description'</p>
 		<p><span class="bold">Observation Type: </span>'$datastream_observation_type'</p>
@@ -280,9 +281,9 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_gauge.htm"
 done
 
-################################
-# Create update_thing.htm page #
-################################
+#####################################
+# Create read_update_thing.htm page #
+#####################################
 
 echo '<!doctype html>
 <html lang="en">
@@ -296,31 +297,44 @@ echo '<!doctype html>
 	<h1>Update Thing</h1>
 	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
 	<p class="bold">name</p>
-	<textarea id="thing_name" rows="1" placeholder="String">'$thing_name'</textarea>
+	<textarea id="thing_name" rows="1" placeholder="String"></textarea>
 	<p class="bold">description</p>
-	<textarea id="thing_description" rows="1" placeholder="String">'$thing_description'</textarea>
+	<textarea id="thing_description" rows="1" placeholder="String"></textarea>
 	<p class="bold">properties</p>
-	<textarea id="thing_property" rows="3" placeholder="JSON">{' > visualisation/update_thing.htm
-
-number_of_property=`cat configuration.txt | grep ^property_name | wc -l`
-for (( i=1; i<=$number_of_property; i++ )); do
-	property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
-	property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
-	echo -n '"'$property_name'": "'$property_description'"' >> visualisation/update_thing.htm
-	if (( i<$number_of_property )); then
-		echo ', ' >> visualisation/update_thing.htm
-	fi
-done
-
-echo ''
-echo '}</textarea>
+	<textarea id="thing_property" rows="3" placeholder="JSON"></textarea>
 	<button id="update_thing" onclick="updateThing();">Update Thing</button>
+	<a href="index.htm"><button>Back to main page</button></a>
 	<script>
+		// Read the data in JSON format from the SensorUp server then update the page based on the data
+		var thing_id = '$thing_id';
+		console.log("Thing ID: " + thing_id);
+		var thing = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				var thing_name = thing.responseJSON.name;
+				console.log("Thing Name: " + thing_name);
+				document.querySelector("#thing_name").textContent = thing_name;
+				var thing_description = thing.responseJSON.description;
+				console.log("Thing Description: " + thing_description);
+				document.querySelector("#thing_description").textContent = thing_description;
+				var thing_property = JSON.stringify(thing.responseJSON.properties);
+				console.log("Thing Properties: " + thing_property);
+				document.querySelector("#thing_property").textContent = thing_property;
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
 		function updateThing(){
-			var thing_id = '$thing_id';
 			var thing_name = document.querySelector("#thing_name").value;
+			console.log("Thing Name: " + thing_name);
 			var thing_description = document.querySelector("#thing_description").value;
+			console.log("Thing Description: " + thing_description);
 			var thing_property = document.querySelector("#thing_property").value;
+			console.log("Thing Property: " + thing_property);
 			var thing = '"'"'{ '"'"';
 			if (thing_name !== "") {
 				thing = thing + '"'"'"name": "'"'"' + thing_name + '"'"'"'"'"';
@@ -338,12 +352,9 @@ echo '}</textarea>
 				thing = thing + '"'"'"properties": '"'"' + thing_property;
 			}
 			thing = thing + '"'"' }'"'"';
-			console.log("Thing Name: " + thing_name);
-			console.log("Thing Description: " + thing_description);
-			console.log("Thing Property: " + thing_property);
 			console.log("Thing: " + thing);
 			$.ajax({
-				url: "'$base_url'/Things('$thing_id')",
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
 				type: "PATCH",
 				data: thing,
 				contentType: "application/json; charset=utf-8",
@@ -362,8 +373,8 @@ echo '}</textarea>
 		}
 	</script>
 </body>
-</html>' >> visualisation/update_thing.htm
+</html>' > visualisation/read_update_thing.htm
 
-# Put update_thing.htm file to the visualisation server
+# Put read_update_thing.htm file to the visualisation server
 
-lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/update_thing.htm"
+lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/read_update_thing.htm"

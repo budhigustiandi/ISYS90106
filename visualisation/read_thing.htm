@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Read Thing</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Update Thing</h1>
+	<p><span class="bold">ID in the server: </span>1785996</p>
+	<p class="bold">name</p>
+	<textarea id="thing_name" rows="1" placeholder="String"></textarea>
+	<p class="bold">description</p>
+	<textarea id="thing_description" rows="1" placeholder="String"></textarea>
+	<p class="bold">properties</p>
+	<textarea id="thing_property" rows="3" placeholder="JSON"></textarea>
+	<button id="update_thing" onclick="updateThing();">Update Thing</button>
+	<script>
+		// Read the data in JSON format from the SensorUp server then update the page based on the data
+		var thing = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1785996)",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				var thing_name = thing.responseJSON.name;
+				console.log("Thing Name: " + thing_name);
+				document.querySelector("#thing_name").textContent = thing_name;
+				var thing_description = thing.responseJSON.description;
+				console.log("Thing Description: " + thing_description);
+				document.querySelector("#thing_description").textContent = thing_description;
+				var thing_property = JSON.stringify(thing.responseJSON.properties);
+				console.log("Thing Properties: " + thing_property);
+				document.querySelector("#thing_property").textContent = thing_property;
+				//var budhi = JSON.stringify({"properties": {"Thing Property Name 1": "Thing Property Description 1", "Thing Property Name 2": "Thing Property Description 3"}});
+				//console.log(budhi);
+				//document.querySelector("#thing_property").textContent = budhi;
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
+		function updateThing(){
+			var thing_id = 1785996;
+			var thing_name = document.querySelector("#thing_name").value;
+			var thing_description = document.querySelector("#thing_description").value;
+			var thing_property = document.querySelector("#thing_property").value;
+			var thing = '{ ';
+			if (thing_name !== "") {
+				thing = thing + '"name": "' + thing_name + '"';
+			}
+			if (thing_description !== "") {
+				if (thing_name !== "") {
+					thing = thing + ', ';
+				}
+				thing = thing + '"description": "' + thing_description + '"';
+			}
+			if (thing_property !== "") {
+				if ((thing_name !== "") || (thing_description !== "")) {
+					thing = thing + ', ';
+				}
+				thing = thing + '"properties": ' + thing_property;
+			}
+			thing = thing + ' }';
+			console.log("Thing Name: " + thing_name);
+			console.log("Thing Description: " + thing_description);
+			console.log("Thing Property: " + thing_property);
+			console.log("Thing: " + thing);
+			$.ajax({
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+				type: "PATCH",
+				data: thing,
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					console.log(data);
+					var user_info_node = document.createElement("p");
+					var user_info_text = document.createTextNode("Thing has been updated!");
+					user_info_node.appendChild(user_info_text);
+					document.querySelector("body").appendChild(user_info_node);
+				},
+				error: function(response, status){
+					console.log(response);
+					console.log(status);
+				}
+			});
+		}
+	</script>
+</body>
+</html>
