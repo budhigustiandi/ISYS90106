@@ -2,139 +2,127 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Thing Name</title>
+	<title>Project RATIH Main Page</title>
+	<link rel="stylesheet" href="main.css">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
    integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
-   crossorigin=""/>
+   crossorigin="">
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
-	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script src="https://code.highcharts.com/stock/highstock.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
-	<script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-    <script src="http://momentjs.com/downloads/moment.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.4/js/bootstrap-datetimepicker.min.js"></script>
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/highcharts-more.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
-	<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
-	<style>
-	h2 {
-		color: blue;
-	}
-	.bold {
-		font-weight: bold;
-	}
-	#mapid {
-		height: 300px;
-	}
-	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-	<p>Click <a href="http://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1613215)?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>
-	<h1>Thing</h1>
-	<p><span class="bold">ID in the server: </span>1613215</p>
-	<p><span class="bold">Name: </span>Project RATIH</p>
-	<p><span class="bold">Description: </span>Test device used to implement <span class="bold">RA</span>spberry-based automa<span class="bold">TI</span>on for sensort<span class="bold">H</span>ings API</p>
-	<p><span class="bold">Properties: </span></p>
-	<ul>
-		<li><span class="bold">Hardware Used: </span>Raspberry Pi 3</li>
-		<li><span class="bold">Creator: </span>Budhi Gustiandi</li>
-	</ul>
+<p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
+<h1>Thing</h1>
+	<p><span class="bold">ID in the server: </span>1684190</p>
+	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
+	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
+	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>
+	<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
 	<p><span class="bold">Name: </span>Home Laboratory</p>
 	<p><span class="bold">Description: </span>Workspace at home built as a laboratory</p>
 	<p><span class="bold">Encoding Type: </span>"application/vnd.geo+json"</p>
 	<p><span class="bold">Location: </span></p>
 	<ul>
-		<li><span class="bold">Longitude: </span>106.8473377</li>
-		<li><span class="bold">Latitude: </span>-6.3238989</li>
+		<li><span class="bold">Longitude: </span>144.960282</li>
+		<li><span class="bold">Latitude: </span>-37.808569</li>
 	</ul>
-	<div id="mapid"></div>
+<div id="mapid"></div>
 	<script>
-		var mymap = L.map('mapid').setView([-6.3238989, 106.8473377], 17);
+		// Read the data in JSON format from the SensorUp server then update the page based on the data
+		var thing_id = 1684190;
+		console.log("Thing ID: " + thing_id);
+		var thing = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				var thing_name = thing.responseJSON.name;
+				console.log("Thing Name: " + thing_name);
+				document.querySelector("#thing_name").textContent = thing_name;
+				var thing_description = thing.responseJSON.description;
+				console.log("Thing Description: " + thing_description);
+				document.querySelector("#thing_description").textContent = thing_description;
+				var thing_property = JSON.stringify(thing.responseJSON.properties);
+				console.log("Thing Properties: " + thing_property);
+				document.querySelector("#thing_property").textContent = thing_property;
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
+		var mymap = L.map('mapid').setView([-37.808569, 144.960282], 17);
 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			maxZoom: 18,
 			id: 'mapbox.streets'
 		}).addTo(mymap);
-		var marker = L.marker([-6.3238989, 106.8473377]).addTo(mymap);
+		var marker = L.marker([-37.808569, 144.960282]).addTo(mymap);
 		marker.bindPopup("Thing's location.").openPopup();
 	</script>
 	<h1>Datastream</h1>
-		<h2>Room Temperature</h2>
-		<p><span class="bold">ID: </span>'$datastream_id'</p>
+<h2>Room Temperature <span>show <a href="datastream_1684195_chart.htm" target="_blank">chart</a> | <a href="datastream_1684195_gauge.htm" target="_blank">gauge</a></span></h2>
+		<p><span class="bold">ID: </span>1684195</p>
 		<p><span class="bold">Description: </span>Datastream for recording temperature</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
 		<p><span class="bold">Unit of Measurement: </span>Degree Celcius</p>
 		<p><span class="bold">Symbol: </span>degC</p>
 		<p><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius</p>
-			<h3>Observed Property</h3>
+<h3>Observed Property</h3>
 			<ul>
 				<li><span class="bold">Name: </span>Area Temperature</li>
-				<li><span class="bold">Description: </span>The degree or intensity of heat present in the area</li>
+				<li><span class="bold">Description: </span>A physical quantity expressing hot and cold</li>
 				<li><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature</li>
 			</ul>
-			<h3>Sensor</h3>
+<h3>Sensor</h3>
 			<ul>
 				<li><span class="bold">Name: </span>DHT11</li>
-				<li><span class="bold">Description: </span>DHT11 temperature sensor</li>
+				<li><span class="bold">Description: </span>DHT11 temperature and humidity module</li>
 				<li><span class="bold">Encoding Type: </span>application/pdf</li>
-				<li><span class="bold">Metadata: </span>htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf</li>
+				<li><span class="bold">Metadata: </span>https://akizukidenshi.com/download/ds/aosong/DHT11.pdf</li>
 			</ul>
-		<div id="room_temperature" style="height: 300px; width: 100%; margin: auto;"></div>
-		<script>
-			$(function() {
-				var sensorthingsHCDT = new SensorthingsHCDT('http://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
-					'dataStreamId': [1653970]
-				});
-				var request = sensorthingsHCDT.request();
-				if (request.status == 'success') {
-					sensorthingsHCDT.chart('room_temperature', request);
-				}
-			});
-		 </script>
-		<h2>Room Humidity</h2>
+<h2>Room Humidity <span>show <a href="datastream_1684198_chart.htm" target="_blank">chart</a> | <a href="datastream_1684198_gauge.htm" target="_blank">gauge</a></span></h2>
+		<p><span class="bold">ID: </span>1684198</p>
 		<p><span class="bold">Description: </span>Datastream for recording humidity</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
 		<p><span class="bold">Unit of Measurement: </span>Percentage</p>
 		<p><span class="bold">Symbol: </span>%</p>
-		<p><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Percentage</p>
-			<h3>Observed Property</h3>
+		<p><span class="bold">Definition: </span>1 part of 100</p>
+<h3>Observed Property</h3>
 			<ul>
-				<li><span class="bold">Name: </span>Area Temperature</li>
-				<li><span class="bold">Description: </span>The degree or intensity of heat present in the area</li>
-				<li><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature</li>
+				<li><span class="bold">Name: </span>Absolute Humidity</li>
+				<li><span class="bold">Description: </span>Absolute humidity is the mass of water in a particular volume of air. It is a measure of the density of water vapor in an atmosphere.</li>
+				<li><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AbsoluteHumidity</li>
 			</ul>
-			<h3>Sensor</h3>
+<h3>Sensor</h3>
 			<ul>
 				<li><span class="bold">Name: </span>DHT11</li>
-				<li><span class="bold">Description: </span>DHT11 temperature sensor</li>
+				<li><span class="bold">Description: </span>DHT11 temperature and humidity module</li>
 				<li><span class="bold">Encoding Type: </span>application/pdf</li>
-				<li><span class="bold">Metadata: </span>htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf</li>
+				<li><span class="bold">Metadata: </span>https://akizukidenshi.com/download/ds/aosong/DHT11.pdf</li>
 			</ul>
-		<h2>Light Intensity</h2>
+<h2>Room Light Intensity <span>show <a href="datastream_1684201_chart.htm" target="_blank">chart</a> | <a href="datastream_1684201_gauge.htm" target="_blank">gauge</a></span></h2>
+		<p><span class="bold">ID: </span>1684201</p>
 		<p><span class="bold">Description: </span>Datastream for recording light intensity</p>
 		<p><span class="bold">Observation Type: </span>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</p>
-		<p><span class="bold">Unit of Measurement: </span>Unitless</p>
-		<p><span class="bold">Symbol: </span></p>
-		<p><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#LightIntensity</p>
-			<h3>Observed Property</h3>
+		<p><span class="bold">Unit of Measurement: </span>Lux</p>
+		<p><span class="bold">Symbol: </span>lx</p>
+		<p><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Lux</p>
+<h3>Observed Property</h3>
 			<ul>
-				<li><span class="bold">Name: </span>Area Temperature</li>
-				<li><span class="bold">Description: </span>The degree or intensity of heat present in the area</li>
-				<li><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature</li>
+				<li><span class="bold">Name: </span>Luminous Flux</li>
+				<li><span class="bold">Description: </span>Luminous Flux or Luminous Power is the measure of the perceived power of light. It differs from radiant flux, the measure of the total power of light emitted, in that luminous flux is adjusted to reflect the varying sensitivity of the human eye to different wavelengths of light.</li>
+				<li><span class="bold">Definition: </span>http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#LuminousFlux</li>
 			</ul>
-			<h3>Sensor</h3>
+<h3>Sensor</h3>
 			<ul>
-				<li><span class="bold">Name: </span>DHT11</li>
-				<li><span class="bold">Description: </span>DHT11 temperature sensor</li>
-				<li><span class="bold">Encoding Type: </span>application/pdf</li>
-				<li><span class="bold">Metadata: </span>htpps://cdn-shop.adafruit.com/datasheets/DHT11.pdf</li>
+				<li><span class="bold">Name: </span>Photoresistor Light Sensor</li>
+				<li><span class="bold">Description: </span>A Light Sensor is something that can be used to detect the current ambient light level - i.e. how bright/dark it is. It changes its resistance based on the amount of light that falls upon it.</li>
+				<li><span class="bold">Encoding Type: </span>application/html</li>
+				<li><span class="bold">Metadata: </span>http://education.rec.ri.cmu.edu/content/electronics/boe/light_sensor/1.html</li>
 			</ul>
 </body>
-<html>
+</html>

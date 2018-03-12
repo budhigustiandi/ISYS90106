@@ -21,6 +21,7 @@ echo '<!doctype html>
 	<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
    integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
    crossorigin=""></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>' > visualisation/index.htm
 
@@ -29,32 +30,20 @@ thing_id=`cat configuration.txt | grep thing_id | cut -d "=" -f 2`
 observation_interval=`cat configuration.txt | grep observation_interval | cut -d "=" -f 2`
 (( observation_interval*=1000 ))
 
-echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>' >> visualisation/index.htm
-
-thing_name=`cat configuration.txt | grep thing_name | cut -d "=" -f 2`
-thing_description=`cat configuration.txt | grep thing_description | cut -d "=" -f 2`
+echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>' >> visualisation/index.htm
 
 echo '<h1>Thing</h1>
 	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
-	<p><span class="bold">Name: </span>'$thing_name'</p>
-	<p><span class="bold">Description: </span>'$thing_description'</p>
-	<p><span class="bold">Properties: </span></p>
-	<ul>' >> visualisation/index.htm
-
-number_of_property=`cat configuration.txt | grep ^property_name | wc -l`
-for (( i=1; i<=$number_of_property; i++ )); do
-	property_name=`cat configuration.txt | grep ^property_name | head -$i | tail -1 | cut -d "=" -f 2`
-	property_description=`cat configuration.txt | grep ^property_description | head -$i | tail -1 | cut -d "=" -f 2`
-	echo '<li><span class="bold">'$property_name': </span>'$property_description'</li>' >> visualisation/index.htm
-done
+	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
+	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
+	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>' >> visualisation/index.htm
 
 location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
 location_description=`cat configuration.txt | grep location_description | cut -d "=" -f 2`
 location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
 location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
 
-echo '</ul>
-	<a href="read_update_thing.htm"><button>Update Thing</button></a>
+echo '<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
 	<p><span class="bold">Name: </span>'$location_name'</p>
 	<p><span class="bold">Description: </span>'$location_description'</p>
@@ -67,6 +56,29 @@ echo '</ul>
 
 echo '<div id="mapid"></div>
 	<script>
+		// Read the data in JSON format from the SensorUp server then update the page based on the data
+		var thing_id = '$thing_id';
+		console.log("Thing ID: " + thing_id);
+		var thing = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				var thing_name = thing.responseJSON.name;
+				console.log("Thing Name: " + thing_name);
+				document.querySelector("#thing_name").textContent = thing_name;
+				var thing_description = thing.responseJSON.description;
+				console.log("Thing Description: " + thing_description);
+				document.querySelector("#thing_description").textContent = thing_description;
+				var thing_property = JSON.stringify(thing.responseJSON.properties);
+				console.log("Thing Properties: " + thing_property);
+				document.querySelector("#thing_property").textContent = thing_property;
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
 		var mymap = L.map('"'mapid'"').setView(['$location_latitude', '$location_longitude'], 17);
 		L.tileLayer('"'"'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'"'"', {
 			attribution: '"'"'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'"'"',

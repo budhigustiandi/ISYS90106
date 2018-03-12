@@ -13,13 +13,17 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-<p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
+<p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams" target="_blank">here</a> to show data in JSON format</p>
 <h1>Thing</h1>
 	<p><span class="bold">ID in the server: </span>1684190</p>
 	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
 	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
-	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>
-<a href="read_update_thing.htm"><button>Update Thing</button></a>
+	<p><span class="bold">Properties: </span></p>
+	<ul>
+<li><span class="bold">Hardware Used: </span>Raspberry Pi 3</li>
+<li><span class="bold">Creator: </span>Budhi Gustiandi</li>
+</ul>
+	<a href="read_update_thing.htm"><button>Update Thing</button></a>
 	<h1>Location</h1>
 	<p><span class="bold">Name: </span>Home Laboratory</p>
 	<p><span class="bold">Description: </span>Workspace at home built as a laboratory</p>
@@ -46,7 +50,9 @@
 				console.log("Thing Description: " + thing_description);
 				document.querySelector("#thing_description").textContent = thing_description;
 				var thing_property = JSON.stringify(thing.responseJSON.properties);
-				console.log("Thing Properties: " + thing_property);
+				for (var i=0; i<thing_property.length; i++) {
+					console.log(thing_property[i]);
+				};
 				document.querySelector("#thing_property").textContent = thing_property;
 			},
 			error: function(response, status){
