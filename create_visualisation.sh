@@ -42,11 +42,12 @@ echo '<p>Click <a href="'$base_url'/Things('$thing_id')?$expand=Locations,Datast
 	<p><span class="bold">Description: </span><span id="location_description"></span></p>
 	<p><span class="bold">Encoding: </span><span id="location_encoding"></span></p>
 	<p><span class="bold">Type: </span><span id="location_type"></span></p>
-	<p><span class="bold">Location: </span></p>
+	<p><span class="bold">Coordinates: </span></p>
 	<ul>
 		<li><span class="bold">Longitude: </span><span id="location_longitude"></span></li>
 		<li><span class="bold">Latitude: </span><span id="location_latitude"></li>
 	</ul>
+	<a href="read_update_location.htm"><button>Update Location</button></a>
 	<div id="mapid"></div>
 	<script>
 		var thing = $.ajax({
@@ -395,3 +396,109 @@ echo '<!doctype html>
 # Put read_update_thing.htm file to the visualisation server
 
 lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/read_update_thing.htm"
+
+########################################
+# Create read_update_location.htm page #
+########################################
+
+echo '<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Project RATIH - Update Location</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Update Location</h1>
+	<p class="bold">name</p>
+	<textarea id="location_name" rows="1" placeholder="String"></textarea>
+	<p class="bold">description</p>
+	<textarea id="location_description" rows="1" placeholder="String"></textarea>
+	<p class="bold">coordinates</p>
+	<ul>
+		<li><p class="bold">longitude</p><textarea id="location_longitude" rows="1" placeholder="Number"></textarea></li>
+		<li><p class="bold">latitude</p><textarea id="location_latitude" rows="1" placeholder="Number"></textarea></li>
+	</ul>
+	<button id="update_thing" onclick="updateLocation();">Update Location</button>
+	<a href="index.htm"><button>Back to main page</button></a>
+	<script>
+		var thing = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things('$thing_id')?$expand=Locations,Datastreams",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				var location = JSON.stringify(thing.responseJSON.Locations);
+				location = location.slice(1,location.length-1);
+				console.log("Location: " + location);
+				location = JSON.parse(location);
+				var location_id = location["@iot.id"];
+				console.log("Location ID: " + location_id);
+				console.log("Location Name: " + location.name);
+				document.querySelector("#location_name").textContent = location.name;
+				console.log("Location Description: " + location.description);
+				document.querySelector("#location_description").textContent = location.description;
+				var location_longitude = location.location.coordinates[0];
+				console.log("Location Longitude: " + location_longitude);
+				document.querySelector("#location_longitude").textContent = location_longitude;
+				var location_latitude = location.location.coordinates[1];
+				console.log("Location Latitude: " + location_latitude);
+				document.querySelector("#location_latitude").textContent = location_latitude;
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
+		function updateLocation(){
+			var thing = $.ajax({
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things('$thing_id')?$expand=Locations,Datastreams",
+				type: "GET",
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					var location = JSON.stringify(thing.responseJSON.Locations);
+					location = location.slice(1,location.length-1);
+					location = JSON.parse(location);
+					var location_id = location["@iot.id"];
+					var location_name = document.querySelector("#location_name").value;
+					console.log("Location Name: " + location_name);
+					var location_description = document.querySelector("#location_description").value;
+					console.log("Location Description: " + location_description);
+					var location_longitude = document.querySelector("#location_longitude").value;
+					console.log("Longitude: " + location_longitude);
+					var location_latitude = document.querySelector("#location_latitude").value;
+					console.log("Latitude: " + location_latitude);
+					location = '"'"'{'"'"';
+					location = location + '"'"'"name": "'"'"' + location_name + '"'"'", "description": "'"'"' + location_description + '"'"'", "encodingType": "application/vnd.geo+json", "location": {"type": "Point", "coordinates": ['"'"' + location_longitude + '"'"','"'"' + location_latitude + '"'"']}}'"'"';
+					console.log("Location: " + location);
+					$.ajax({
+						url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Locations(" + location_id + ")",
+						type: "PATCH",
+						data: location,
+						contentType: "application/json; charset=utf-8",
+						success: function(data){
+							console.log(data);
+							var user_info_node = document.createElement("p");
+							var user_info_text = document.createTextNode("Location has been updated!");
+							user_info_node.appendChild(user_info_text);
+							document.querySelector("body").appendChild(user_info_node);
+						},
+						error: function(response, status){
+							console.log(response);
+							console.log(status);
+						}
+					});
+				},
+				error: function(response, status){
+					console.log(response);
+					console.log(status);
+				}
+			});
+		}
+	</script>
+</body>
+</html>' > visualisation/read_update_location.htm
+
+# Put read_update_location.htm file to the visualisation server
+
+lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/read_update_location.htm"

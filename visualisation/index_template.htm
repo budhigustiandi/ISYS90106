@@ -25,12 +25,13 @@
 	<p><span class="bold">Description: </span><span id="location_description"></span></p>
 	<p><span class="bold">Encoding: </span><span id="location_encoding"></span></p>
 	<p><span class="bold">Type: </span><span id="location_type"></span></p>
-	<p><span class="bold">Location: </span></p>
+	<p><span class="bold">Coordinates: </span></p>
 	<ul>
 		<li><span class="bold">Longitude: </span><span id="location_longitude"></span></li>
 		<li><span class="bold">Latitude: </span><span id="location_latitude"></li>
 	</ul>
-<div id="mapid"></div>
+	<a href="read_update_location.htm"><button>Update Location</button></a>
+	<div id="mapid"></div>
 	<script>
 		// Read the data in JSON format from the SensorUp server then update the page based on the data
 		var thing_id = 1684190;
@@ -80,7 +81,6 @@
 				console.log(status);
 			}
 		});
-		
 	</script>
 	<h1>Datastream</h1>
 <h2>Room Temperature <span>show <a href="datastream_1684195_chart.htm" target="_blank">chart</a> | <a href="datastream_1684195_gauge.htm" target="_blank">gauge</a></span></h2>
