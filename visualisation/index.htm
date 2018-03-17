@@ -66,7 +66,7 @@
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			success: function(data){
-				// Read Thing entity				
+				// Read Thing entity
 				console.log("Thing Name: " + thing.responseJSON.name);
 				document.querySelector("#thing_name").textContent = thing.responseJSON.name;
 				console.log("Thing Description: " + thing.responseJSON.description);
@@ -157,7 +157,10 @@
 					print_datastream_detail(datastream_id);
 				}
 				create_element("body","a",null,"href","read_update_datastream.htm","id","update_datastream");
-				create_element("#update_datastream","button","Update Datastream(s)",null,null,null,null);
+				create_element("#update_datastream","button","Update Datastream",null,null,null,null);
+				// Add some lines to escape link in the bottom of the page
+				create_element("body","br",null,null,null,null,null);
+				create_element("body","br",null,null,null,null,null);
 			},
 			error: function(response, status){
 				console.log(response);
