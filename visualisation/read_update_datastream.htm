@@ -104,6 +104,9 @@
 				create_element("body","span"," ",null,null,null,null);
 				create_element("body","a",null,"href","index.htm","id","back_to_main_page");
 				create_element("#back_to_main_page","button","Back to main page",null,null,null,null);
+				// Add line break to escape linkn in the bottom of the page
+				create("body","br",null,null,null,null,null);
+				create("body","br",null,null,null,null,null);
 			},
 			error: function(response, status){
 				console.log(response);
