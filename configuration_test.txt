@@ -1,0 +1,162 @@
+############
+# BASE URL #
+############
+
+base_url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0
+
+################
+# THING ENTITY #
+################
+
+# Thing ID (DO NOT CHANGE! It will only be generated automatically by the system)
+
+thing_id=1684190
+
+# Mandatory
+
+thing_name=Project RATIH version 3
+thing_description=Test device used to implement RAspberry-based automaTIon for sensortHings API
+thing_url=https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things
+
+# Optional
+
+property_name=Position Status
+property_description=Static Non-GPS
+property_name=Last Update
+property_description=17 March 2018 5
+property_name=Version 3
+property_description=Visual Control Automation
+property_name=Version 2
+property_description=Visualisation automation
+property_name=Version 1
+property_description=Processing automation
+property_name=Creator
+property_description=Budhi Gustiandi
+property_name=Hardware Used
+property_description=Raspberry Pi 3
+
+
+
+###################
+# LOCATION ENTITY #
+###################
+
+# If the thing will be put in a fixed location, choose static
+# If the thing will be used in mobile location, choose dynamic
+# If the thing does not use GPS receiver, choose no_gps
+location_status=no_gps
+
+location_name=Home Laboratory
+location_description=Workspace at home built as a laboratory
+location_longitude=144.960282
+location_latitude=-37.808569
+
+#####################
+# DATASTREAM ENTITY #
+#####################
+
+# Add as many as datastream(s) and associated observed property(ies), sensor(s) and observation(s) that are needed to be connected to the thing
+
+datastream_name=Room Temperature
+datastream_description=Datastream for recording temperature
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Degree Celcius
+unit_of_measurement_symbol=degC
+unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeCelcius
+
+#####################
+# OBSERVED PROPERTY #
+#####################
+
+observed_property_name=Area Temperature
+observed_property_description=A physical quantity expressing hot and cold
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AreaTemperature
+
+##########
+# SENSOR #
+##########
+
+sensor_name=DHT11
+sensor_description=DHT11 temperature and humidity module
+sensor_encoding_type=application/pdf
+sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
+
+###############
+# OBSERVATION #
+###############
+
+observation_command=read_temperature.py
+
+datastream_name=Room Humidity
+datastream_description=Datastream for recording humidity
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Percentage
+unit_of_measurement_symbol=%
+unit_of_measurement_definition=1 part of 100
+
+#####################
+# OBSERVED PROPERTY #
+#####################
+
+observed_property_name=Absolute Humidity
+observed_property_description=Absolute humidity is the mass of water in a particular volume of air. It is a measure of the density of water vapor in an atmosphere.
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#AbsoluteHumidity
+
+##########
+# SENSOR #
+##########
+
+sensor_name=DHT11
+sensor_description=DHT11 temperature and humidity module
+sensor_encoding_type=application/pdf
+sensor_metadata=https://akizukidenshi.com/download/ds/aosong/DHT11.pdf
+
+###############
+# OBSERVATION #
+###############
+
+observation_command=read_humidity.py
+
+datastream_name=Room Light Intensity
+datastream_description=Datastream for recording light intensity
+datastream_observation_type=http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement
+unit_of_measurement_name=Lux
+unit_of_measurement_symbol=lx
+unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#Lux
+
+#####################
+# OBSERVED PROPERTY #
+#####################
+
+observed_property_name=Luminous Flux
+observed_property_description=Luminous Flux or Luminous Power is the measure of the perceived power of light. It differs from radiant flux, the measure of the total power of light emitted, in that luminous flux is adjusted to reflect the varying sensitivity of the human eye to different wavelengths of light.
+observed_property_definition=http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#LuminousFlux
+
+##########
+# SENSOR #
+##########
+
+sensor_name=Photoresistor Light Sensor
+sensor_description=A Light Sensor is something that can be used to detect the current ambient light level - i.e. how bright/dark it is. It changes its resistance based on the amount of light that falls upon it.
+sensor_encoding_type=application/html
+sensor_metadata=http://education.rec.ri.cmu.edu/content/electronics/boe/light_sensor/1.html
+
+###############
+# OBSERVATION #
+###############
+
+observation_command=read_light.py
+
+########################
+# OBSERVATION INTERVAL #
+########################
+
+observation_interval=60
+
+##################################
+# VISUALISATION SERVER PARAMETER #
+##################################
+
+username=budhigustiandi
+password=budhigustiandi
+site=files.000webhost.com
