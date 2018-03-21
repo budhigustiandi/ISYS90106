@@ -35,33 +35,31 @@ echo ""
 ###########################################
 
 location=`curl -X GET -H "Content-Type: application/json" "$base_url/Things($thing_id)/Locations"`
-location=`echo $location | sed -e 's/^{//g' -e 's/}$//g' -e 's/@iot.count/\n@iot.count/g' -e 's/value/\nvalue/g'| grep value`
-location=`echo $location | sed -e 's/value:\[{//g' -e 's/}\]$//g'`
+location=`echo $location | sed -e 's/^{//g' -e 's/}$//g' -e 's/"@iot.count":/\n"@iot.count":/g' -e 's/"value":/\n"value":/g'| grep '"value":'`
+location=`echo $location | sed -e 's/"value":\[{//g' -e 's/}\]$//g'`
+echo "Location: "$location
 
 # Extract location name
-location_name=`echo $location | sed -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/location:/\nlocation:/g' -e 's/Things@iot.navigationLink:/\nThings@iot.navigationLink:/g' -e 's/HistoricalLocations@iot.navigationLink:/\nHistoricalLocations@iot.navigationLink:/g' | grep name:`
-location_name=`echo $location_name | sed 's/name://g'`
-location_name=`echo $location_name | sed 's/,$//g'`
+location_name=`echo $location | sed -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"location":/\n"location":/g' -e 's/"Things@iot.navigationLink":/\n"Things@iot.navigationLink":/g' -e 's/"HistoricalLocations@iot.navigationLink":/\n"HistoricalLocations@iot.navigationLink":/g' | grep '"name":'`
+location_name=`echo $location_name | cut -d "\"" -f 4`
 echo "Location Name: "$location_name
 
 # Extract location description
-location_description=`echo $location | sed -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/location:/\nlocation:/g' -e 's/Things@iot.navigationLink:/\nThings@iot.navigationLink:/g' -e 's/HistoricalLocations@iot.navigationLink:/\nHistoricalLocations@iot.navigationLink:/g' | grep description:`
-location_description=`echo $location_description | sed 's/description://g'`
-location_description=`echo $location_description | sed 's/,$//g'`
+location_description=`echo $location | sed -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"location":/\n"location":/g' -e 's/"Things@iot.navigationLink":/\n"Things@iot.navigationLink":/g' -e 's/"HistoricalLocations@iot.navigationLink":/\n"HistoricalLocations@iot.navigationLink":/g' | grep '"description":'`
+location_description=`echo $location_description | cut -d "\"" -f 4`
 echo "Location Description: "$location_description
 
+location_coordinate=`echo $location | sed -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"location":/\n"location":/g' -e 's/"Things@iot.navigationLink":/\n"Things@iot.navigationLink":/g' -e 's/"HistoricalLocations@iot.navigationLink":/\n"HistoricalLocations@iot.navigationLink":/g' | grep '"location":'`
+location_coordinate=`echo $location_coordinate | sed -e 's/"location":{//g' -e 's/}$//g' -e 's/"coordinates":/\n"coordinates":/g' -e 's/"type":/\n"type":/g' | grep '"coordinates":'`
+
 # Extract location longitude
-location_longitude=`echo $location | sed -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/location:/\nlocation:/g' -e 's/Things@iot.navigationLink:/\nThings@iot.navigationLink:/g' -e 's/HistoricalLocations@iot.navigationLink:/\nHistoricalLocations@iot.navigationLink:/g' | grep location:`
-location_longitude=`echo $location_longitude | sed -e 's/location:{//g' -e 's/}$//g' -e 's/coordinates:/\ncoordinates:/g' -e 's/type/\type/g' | grep ^coordinates`
-location_longitude=`echo $location_longitude | cut -d ":" -f 2`
+location_longitude=`echo $location_coordinate | cut -d ":" -f 2`
 location_longitude=`echo $location_longitude | cut -d "," -f 1`
 location_longitude=`echo $location_longitude | cut -d "[" -f 2`
 echo "Location Longitude: "$location_longitude
 
 # Extract location latitude
-location_latitude=`echo $location | sed -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/location:/\nlocation:/g' -e 's/Things@iot.navigationLink:/\nThings@iot.navigationLink:/g' -e 's/HistoricalLocations@iot.navigationLink:/\nHistoricalLocations@iot.navigationLink:/g' | grep location:`
-location_latitude=`echo $location_latitude | sed -e 's/location:{//g' -e 's/}$//g' -e 's/coordinates:/\ncoordinates:/g' -e 's/type/\type/g' | grep ^coordinates`
-location_latitude=`echo $location_latitude | cut -d ":" -f 2`
+location_latitude=`echo $location_coordinate | cut -d ":" -f 2`
 location_latitude=`echo $location_latitude | cut -d "," -f 2`
 location_latitude=`echo $location_latitude | cut -d "]" -f 1`
 echo "Location Latitude: "$location_latitude
