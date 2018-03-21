@@ -76,8 +76,8 @@ datastream_count=`echo $datastream | cut -d ":" -f 2`
 datastream_count=`echo $datastream_count | cut -d "," -f 1`
 echo "Datastream Count: "$datastream_count
 
-datastream=`echo $datastream | sed -e 's/^{//g' -e 's/}$//g' -e 's/value:/\nvalue:/g' | grep ^value:`
-datastream=`echo $datastream | sed -e 's/^value:\[//g' -e 's/\]$//g'`
+datastream=`echo $datastream | sed -e 's/^{//g' -e 's/}$//g' -e 's/"value":/\n"value":/g' | grep '"value":'`
+datastream=`echo $datastream | sed -e 's/"value":\[//g' -e 's/\]$//g'`
 echo ""
 
 #######################################
@@ -110,10 +110,10 @@ echo "" >> temporary_configuration.txt
 # Extract thing properties
 for (( i=1; i<=$number_of_thing_properties; i++ )); do
 	properties_detail=`echo $thing_properties | sed 's/,/\n/g' | head -$i | tail -1`
-	property_name=`echo $properties_detail | cut -d ":" -f 1`
+	property_name=`echo $properties_detail | cut -d "\"" -f 2`
 	echo "Property Name $i: "$property_name
 	echo "property_name="$property_name >> temporary_configuration.txt
-	property_description=`echo $properties_detail | cut -d ":" -f 2`
+	property_description=`echo $properties_detail | cut -d "\"" -f 4`
 	echo "Property Description $i: "$property_description
 	echo "property_description="$property_description >> temporary_configuration.txt
 done
@@ -142,48 +142,43 @@ for (( i=1; i<=$datastream_count; i++ )); do
 # DATASTREAM ENTITY '$i'#
 ######################' >> temporary_configuration.txt
 	echo "" >> temporary_configuration.txt
-	single_datastream=`echo $datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' | grep {@iot.id: | tail -$i | head -1`
+	single_datastream=`echo $datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' | grep '{"@iot.id":' | tail -$i | head -1`
 	echo "Datastream "$i": "$single_datastream
 
 	# Extract datastream id
-	datastream_id=`echo $single_datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/observationType:/\nobservationType:/g' -e 's/unitOfMeasurement:/\nunitOfMeasurement:/g' -e 's/Observations@iot.navigationLink:/\nObservations@iot.navigationLink:/g' -e 's/ObservedProperty@iot.navigationLink:/\nObservedProperty@iot.navigationLink:/g' -e 's/Sensor@iot.navigationLink:/\nSensor@iot.navigationLink:/g' -e 's/Thing@iot.navigationLink:/\nThing@iot.navigationLink:/g' | grep @iot.id:`
+	datastream_id=`echo $single_datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"observationType":/\n"observationType":/g' -e 's/"unitOfMeasurement":/\n"unitOfMeasurement":/g' -e 's/"Observations@iot.navigationLink":/\n"Observations@iot.navigationLink":/g' -e 's/"ObservedProperty@iot.navigationLink":/\n"ObservedProperty@iot.navigationLink":/g' -e 's/"Sensor@iot.navigationLink":/\n"Sensor@iot.navigationLink":/g' -e 's/"Thing@iot.navigationLink":/\n"Thing@iot.navigationLink":/g' | grep '"@iot.id":'`
 	datastream_id=`echo $datastream_id | cut -d ":" -f 2`
-	datastream_id=`echo $datastream_id | sed 's/,$//g'`
+	datastream_id=`echo $datastream_id | cut -d "," -f 1`
 	echo "Datastream ID: "$datastream_id
 
 	# Extract datastream name
-	datastream_name=`echo $single_datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/observationType:/\nobservationType:/g' -e 's/unitOfMeasurement:/\nunitOfMeasurement:/g' -e 's/Observations@iot.navigationLink:/\nObservations@iot.navigationLink:/g' -e 's/ObservedProperty@iot.navigationLink:/\nObservedProperty@iot.navigationLink:/g' -e 's/Sensor@iot.navigationLink:/\nSensor@iot.navigationLink:/g' -e 's/Thing@iot.navigationLink:/\nThing@iot.navigationLink:/g' | grep name:`
-	datastream_name=`echo $datastream_name | sed 's/name://g'`
-	datastream_name=`echo $datastream_name | cut -d "," -f 1`
+	datastream_name=`echo $single_datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"observationType":/\n"observationType":/g' -e 's/"unitOfMeasurement":/\n"unitOfMeasurement":/g' -e 's/"Observations@iot.navigationLink":/\n"Observations@iot.navigationLink":/g' -e 's/"ObservedProperty@iot.navigationLink":/\n"ObservedProperty@iot.navigationLink":/g' -e 's/"Sensor@iot.navigationLink":/\n"Sensor@iot.navigationLink":/g' -e 's/"Thing@iot.navigationLink":/\n"Thing@iot.navigationLink":/g' | grep '"name":'`
+	datastream_name=`echo $datastream_name | cut -d "\"" -f 4`
 	echo "Datastream Name: "$datastream_name
 
 	# Extract datastream description
-	datastream_description=`echo $single_datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/observationType:/\nobservationType:/g' -e 's/unitOfMeasurement:/\nunitOfMeasurement:/g' -e 's/Observations@iot.navigationLink:/\nObservations@iot.navigationLink:/g' -e 's/ObservedProperty@iot.navigationLink:/\nObservedProperty@iot.navigationLink:/g' -e 's/Sensor@iot.navigationLink:/\nSensor@iot.navigationLink:/g' -e 's/Thing@iot.navigationLink:/\nThing@iot.navigationLink:/g' | grep description:`
-	datastream_description=`echo $datastream_description | sed 's/description://g'`
-	datastream_description=`echo $datastream_description | sed 's/,$//g'`
+	datastream_description=`echo $single_datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"observationType":/\n"observationType":/g' -e 's/"unitOfMeasurement":/\n"unitOfMeasurement":/g' -e 's/"Observations@iot.navigationLink":/\n"Observations@iot.navigationLink":/g' -e 's/"ObservedProperty@iot.navigationLink":/\n"ObservedProperty@iot.navigationLink":/g' -e 's/"Sensor@iot.navigationLink":/\n"Sensor@iot.navigationLink":/g' -e 's/"Thing@iot.navigationLink":/\n"Thing@iot.navigationLink":/g' | grep '"description":'`
+	datastream_description=`echo $datastream_description | cut -d "\"" -f 4`
 	echo "Datastream Description: "$datastream_description
 
 	# Extract datastream observation type
-	datastream_observation_type=`echo $single_datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/observationType:/\nobservationType:/g' -e 's/unitOfMeasurement:/\nunitOfMeasurement:/g' -e 's/Observations@iot.navigationLink:/\nObservations@iot.navigationLink:/g' -e 's/ObservedProperty@iot.navigationLink:/\nObservedProperty@iot.navigationLink:/g' -e 's/Sensor@iot.navigationLink:/\nSensor@iot.navigationLink:/g' -e 's/Thing@iot.navigationLink:/\nThing@iot.navigationLink:/g' | grep observationType:`
-	datastream_observation_type=`echo $datastream_observation_type | sed -e 's/observationType://g'`
-	datastream_observation_type=`echo $datastream_observation_type | sed 's/,$//g'`
+	datastream_observation_type=`echo $single_datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"observationType":/\n"observationType":/g' -e 's/"unitOfMeasurement":/\n"unitOfMeasurement":/g' -e 's/"Observations@iot.navigationLink":/\n"Observations@iot.navigationLink":/g' -e 's/"ObservedProperty@iot.navigationLink":/\n"ObservedProperty@iot.navigationLink":/g' -e 's/"Sensor@iot.navigationLink":/\n"Sensor@iot.navigationLink":/g' -e 's/"Thing@iot.navigationLink":/\n"Thing@iot.navigationLink":/g' | grep '"observationType":'`
+	datastream_observation_type=`echo $datastream_observation_type | cut -d "\"" -f 4`
 	echo "Datastream Observation Type: "$datastream_observation_type
 
 	# Extract unit of measurement properties
-	unit_of_measurement=`echo $single_datastream | sed -e 's/{@iot.id:/\n{@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/observationType:/\nobservationType:/g' -e 's/unitOfMeasurement:/\nunitOfMeasurement:/g' -e 's/Observations@iot.navigationLink:/\nObservations@iot.navigationLink:/g' -e 's/ObservedProperty@iot.navigationLink:/\nObservedProperty@iot.navigationLink:/g' -e 's/Sensor@iot.navigationLink:/\nSensor@iot.navigationLink:/g' -e 's/Thing@iot.navigationLink:/\nThing@iot.navigationLink:/g' | grep unitOfMeasurement:`
-	unit_of_measurement=`echo $unit_of_measurement | sed -e 's/unitOfMeasurement:{//g'`
+	unit_of_measurement=`echo $single_datastream | sed -e 's/{"@iot.id":/\n{"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"observationType":/\n"observationType":/g' -e 's/"unitOfMeasurement":/\n"unitOfMeasurement":/g' -e 's/"Observations@iot.navigationLink":/\n"Observations@iot.navigationLink":/g' -e 's/"ObservedProperty@iot.navigationLink":/\n"ObservedProperty@iot.navigationLink":/g' -e 's/"Sensor@iot.navigationLink":/\n"Sensor@iot.navigationLink":/g' -e 's/"Thing@iot.navigationLink":/\n"Thing@iot.navigationLink":/g' | grep '"unitOfMeasurement":'`
+	unit_of_measurement=`echo $unit_of_measurement | sed -e 's/"unitOfMeasurement":{//g'`
 	unit_of_measurement=`echo $unit_of_measurement | sed -e 's/},//g'`
-	unit_of_measurement_name=`echo $unit_of_measurement | sed -e 's/name:/\nname:/g' | grep name:`
-	unit_of_measurement_name=`echo $unit_of_measurement_name | sed 's/name://g'`
-	unit_of_measurement_name=`echo $unit_of_measurement_name | cut -d "," -f 1`
+	echo "Unit of Measurement: "$unit_of_measurement
+	unit_of_measurement_name=`echo $unit_of_measurement | sed -e 's/"name":/\n"name":/g' | grep '"name":'`
+	unit_of_measurement_name=`echo $unit_of_measurement_name | cut -d "\"" -f 4`
 	echo "Unit of Measurement Name: "$unit_of_measurement_name
-	unit_of_measurement_symbol=`echo $unit_of_measurement | sed -e 's/symbol:/\nsymbol:/g' | grep symbol:`
-	unit_of_measurement_symbol=`echo $unit_of_measurement_symbol | sed 's/symbol://g'`
-	unit_of_measurement_symbol=`echo $unit_of_measurement_symbol | cut -d "," -f 1`
+	unit_of_measurement_symbol=`echo $unit_of_measurement | sed -e 's/"symbol":/\n"symbol":/g' | grep '"symbol":'`
+	unit_of_measurement_symbol=`echo $unit_of_measurement_symbol | cut -d "\"" -f 4`
 	echo "Unit of Measurement Symbol: "$unit_of_measurement_symbol
-	unit_of_measurement_definition=`echo $unit_of_measurement | sed -e 's/definition:/\ndefinition:/g' | grep definition:`
-	unit_of_measurement_definition=`echo $unit_of_measurement_definition | sed -e 's/definition://g'`
-	unit_of_measurement_definition=`echo $unit_of_measurement_definition | cut -d "," -f 1`
+	unit_of_measurement_definition=`echo $unit_of_measurement | sed -e 's/"definition":/\n"definition":/g' | grep '"definition":'`
+	unit_of_measurement_definition=`echo $unit_of_measurement_definition | cut -d "\"" -f 4`
 	echo "Unit of Measurement Definition: "$unit_of_measurement_definition
 	echo 'datastream_name='$datastream_name'
 datastream_description='$datastream_description'
@@ -205,21 +200,18 @@ unit_of_measurement_definition='$unit_of_measurement_definition'
 	observed_property=`echo $observed_property | sed -e 's/^{//g' -e 's/}$//g'`
 
 	# Extract observed property name
-	observed_property_name=`echo $observed_property | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/definition:/\ndefinition:/g' -e 's/name:/\nname:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep name:`
-	observed_property_name=`echo $observed_property_name | sed 's/name://g'`
-	observed_property_name=`echo $observed_property_name | sed 's/,$//g'`
+	observed_property_name=`echo $observed_property | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"definition":/\n"definition":/g' -e 's/"name":/\n"name":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"name":'`
+	observed_property_name=`echo $observed_property_name | cut -d "\"" -f 4`
 	echo "Observed Property Name: "$observed_property_name
 
 	# Extract observed property description
-	observed_property_description=`echo $observed_property | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/definition:/\ndefinition:/g' -e 's/name:/\nname:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep description:`
-	observed_property_description=`echo $observed_property_description | sed 's/description://g'`
-	observed_property_description=`echo $observed_property_description | sed 's/,$//g'`
+	observed_property_description=`echo $observed_property | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"definition":/\n"definition":/g' -e 's/"name":/\n"name":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"description":'`
+	observed_property_description=`echo $observed_property_description | cut -d "\"" -f 4`
 	echo "Observed Property Description: "$observed_property_description
 
 	# Extract observed property definition
-	observed_property_definition=`echo $observed_property | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/definition:/\ndefinition:/g' -e 's/name:/\nname:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep definition:`
-	observed_property_definition=`echo $observed_property_definition | sed 's/definition://g'`
-	observed_property_definition=`echo $observed_property_definition | sed 's/,$//g'`
+	observed_property_definition=`echo $observed_property | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"definition":/\n"definition":/g' -e 's/"name":/\n"name":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"definition":'`
+	observed_property_definition=`echo $observed_property_definition | cut -d "\"" -f 4`
 	echo "Observed Property Definition: "$observed_property_definition
 
 	echo '	observed_property_name='$observed_property_name'
@@ -237,29 +229,26 @@ unit_of_measurement_definition='$unit_of_measurement_definition'
 
 	sensor=`curl -X GET -H "Content-Type: application/json" "$base_url/Datastreams($datastream_id)/Sensor"`
 	sensor=`echo $sensor | sed -e 's/^{//g' -e 's/}$//g'`
+	echo "Sensor: "$sensor
 
 	# Extract sensor name
-	sensor_name=`echo $sensor | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/metadata:/\nmetadata:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep name:`
-	sensor_name=`echo $sensor_name | sed 's/name://g'`
-	sensor_name=`echo $sensor_name | sed 's/,$//g'`
+	sensor_name=`echo $sensor | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"metadata":/\n"metadata":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"name":'`
+	sensor_name=`echo $sensor_name | cut -d '"' -f 4`
 	echo "Sensor Name: "$sensor_name
 
 	# Extract sensor description
-	sensor_description=`echo $sensor | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/metadata:/\nmetadata:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep description:`
-	sensor_description=`echo $sensor_description | sed 's/description://g'`
-	sensor_description=`echo $sensor_description | sed 's/,$//g'`
+	sensor_description=`echo $sensor | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"metadata":/\n"metadata":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"description":'`
+	sensor_description=`echo $sensor_description | cut -d '"' -f 4`
 	echo "Sensor Description: "$sensor_description
 
 	# Extract sensor encoding type
-	sensor_encoding_type=`echo $sensor | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/metadata:/\nmetadata:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep encodingType:`
-	sensor_encoding_type=`echo $sensor_encoding_type | sed 's/encodingType://g'`
-	sensor_encoding_typen=`echo $sensor_encoding_type | sed 's/,$//g'`
+	sensor_encoding_type=`echo $sensor | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"metadata":/\n"metadata":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"encodingType":'`
+	sensor_encoding_type=`echo $sensor_encoding_type | cut -d '"' -f 4`
 	echo "Sensor Encoding Type: "$sensor_encoding_type
 
 	# Extract sensor metadata
-	sensor_metadata=`echo $sensor | sed -e 's/@iot.id:/\n@iot.id:/g' -e 's/@iot.selfLink:/\n@iot.selfLink:/g' -e 's/description:/\ndescription:/g' -e 's/name:/\nname:/g' -e 's/encodingType:/\nencodingType:/g' -e 's/metadata:/\nmetadata:/g' -e 's/Datastreams@iot.navigationLink:/\nDatastreams@iot.navigationLink:/g' | grep metadata:`
-	sensor_metadata=`echo $sensor_metadata | sed 's/metadata://g'`
-	sensor_metadata=`echo $sensor_metadata | sed 's/,$//g'`
+	sensor_metadata=`echo $sensor | sed -e 's/"@iot.id":/\n"@iot.id":/g' -e 's/"@iot.selfLink":/\n"@iot.selfLink":/g' -e 's/"description":/\n"description":/g' -e 's/"name":/\n"name":/g' -e 's/"encodingType":/\n"encodingType":/g' -e 's/"metadata":/\n"metadata":/g' -e 's/"Datastreams@iot.navigationLink":/\n"Datastreams@iot.navigationLink":/g' | grep '"metadata":'`
+	sensor_metadata=`echo $sensor_metadata | cut -d '"' -f 4`
 	echo "Sensor Metadata: "$sensor_metadata
 
 	echo '	sensor_name='$sensor_name'
@@ -308,4 +297,4 @@ username='$username'
 password='$password'
 site='$site >> temporary_configuration.txt
 
-#mv temporary_configuration.txt configuration.txt
+mv temporary_configuration.txt configuration.txt
