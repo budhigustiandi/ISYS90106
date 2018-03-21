@@ -44,8 +44,8 @@ property_description=Raspberry Pi 3
 # If the thing does not use GPS receiver, choose no_gps
 location_status=no_gps
 
-location_name=Home Laboratory
-location_description=Workspace at home built as a laboratory
+location_name=SensorThings Laboratory
+location_description=Workspace at home built into an operating laboratory
 location_longitude=144.960282
 location_latitude=-37.808569
 
