@@ -38,7 +38,13 @@ function invalid_prompt {
 }
 function create_new_thing {
 	bash create_thing.sh
-	bash create_update_location.sh
+	location_name=`cat configuration.txt | grep location_name | cut -d "=" -f 2`
+        location_description=`cat configuration.txt | grep location_description | cut -d "=" -f 2`
+        location_longitude=`cat configuration.txt | grep location_longitude | cut -d "=" -f 2`
+        location_latitude=`cat configuration.txt | grep location_latitude | cut -d "=" -f 2`
+        if [[ "$location_name" != "" && "$location_description" != "" && "$location_longitude" != "" && "$location_latitude" != "" ]]; then
+                bash create_update_location.sh
+        fi
 	bash create_datastream.sh
 	bash create_visualisation.sh
 }
@@ -80,6 +86,7 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			echo "Observation interval is set to $hour hour(s) $minute minute(s) $second second(s)."
 			location_status=`cat configuration.txt | grep location_status | cut -d "=" -f 2`
 			while [[ True ]]; do
+				bash sync_configuration.sh
 				bash create_update_location.sh
 				bash create_observation.sh
 				sleep $observation_interval

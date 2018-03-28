@@ -11,7 +11,7 @@ bash read_thing.sh
 thing=`cat thing`
 rm thing
 curl -XPOST -H "Content-type: application/json" -d "$thing" "$base_url/Things"
-
+echo ""
 echo ""
 echo "#############################"
 echo "# A thing has been created. #"
