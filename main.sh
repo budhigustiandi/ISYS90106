@@ -1,11 +1,10 @@
 #!/bin/bash
 
 echo ""
-echo "#######################################################"
-echo "# RAspberry-based automaTIsation for sensortHings API #"
-echo "# Creator: Budhi Gustiandi                            #"
-echo "#######################################################"
-echo ""
+echo "###############################################################################################"
+echo "# Project RATIh (Responsive Automated Thing based on Interoperable SensorThings API Standard) #"
+echo "# Creator: Budhi Gustiandi                                                                    #"
+echo "###############################################################################################"
 
 function main_menu_prompt {
 	echo ""

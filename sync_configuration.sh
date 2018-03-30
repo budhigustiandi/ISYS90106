@@ -298,3 +298,4 @@ password='$password'
 site='$site >> temporary_configuration.txt
 
 mv temporary_configuration.txt configuration.txt
+chown pi:pi configuration.txt

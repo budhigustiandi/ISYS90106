@@ -155,6 +155,41 @@ unit_of_measurement_definition=http://www.qudt.org/qudt/owl/1.0.0/unit/Instances
 	
 	observation_command=read_light.py
 	
+######################
+# DATASTREAM ENTITY 4#
+######################
+
+datastream_name=Buzzer Status
+datastream_description=Modified datastream for controlling a buzzer attached to the thing
+datastream_observation_type=Actuator
+unit_of_measurement_name=On | Off
+unit_of_measurement_symbol=N/A
+unit_of_measurement_definition=On to turn on the buzzer, off to turn off the buzzer
+
+        #####################
+        # OBSERVED PROPERTY #
+        #####################
+
+        observed_property_name=Status
+        observed_property_description=Status of a buzzer attached to the thing
+        observed_property_definition=N/A
+
+	##########
+        # SENSOR #
+        ##########
+
+        sensor_name=Duinotech Buzzer
+        sensor_description=A  varian of buzzer that is usually used in Arduino or Raspberry
+        sensor_encoding_type=application/pdf
+        sensor_metadata=https://www.jaycar.com.au/medias/sys_master/images/8922936410142/XC4288-manualMain.pdf
+
+        ###############
+        # OBSERVATION #
+        ###############
+
+        observation_command=read_buzzer_status.py
+
+
 ########################
 # OBSERVATION INTERVAL #
 ########################
