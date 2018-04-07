@@ -252,6 +252,9 @@ h2 textarea {
 	color: blue;
 	font-weight: bold;
 	font-size: 1em;
+}
+img:hover {
+	cursor: pointer;
 }' > visualisation/main.css
 
 number_of_datastream=`cat configuration.txt | grep datastream_name | wc -l`

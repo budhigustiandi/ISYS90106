@@ -44,3 +44,6 @@ h2 textarea {
 		height: 250px;
 		margin: 0 auto;
 	}
+img:hover {
+	cursor: pointer;
+}
