@@ -51,7 +51,6 @@ echo '<!doctype html>
 	</ul>
 	<a href="read_update_location.htm"><button>Update Location</button></a>
 	<div id="mapid"></div>
-	<h1>Datastream</h1>
 	<script>
 		// Functions to create a new element with certain class(es) or text(s) inside a parent element
 		function create_element(parentElement,newElement,newText,newAttribute1,attributeValue1,newAttribute2,attributeValue2){
@@ -120,6 +119,12 @@ echo '<!doctype html>
 				}).addTo(mymap);
 				var marker = L.marker([location_latitude, location_longitude]).addTo(mymap);
 				marker.bindPopup("Thing'"'"'s location.").openPopup();
+				// Create a container and a heading element for datastream entity(ies)
+				create_element("body","div",null,"id","datastream_container",null,null);
+				create_element("#datastream_container","h1","Datastream",null,null,null,null);
+				// Create a container and a heading element for tasking capability(ies)
+				create_element("body","div",null,"id","tasking_capability_container",null,null);
+				create_element("#tasking_capability_container","h1","Tasking Capability",null,null,null,null);
 				// Read Datastream(s) entity(ies)
 				datastream = thing.responseJSON.Datastreams;
 				console.log("Number of datastream: " + datastream.length);
@@ -128,14 +133,20 @@ echo '<!doctype html>
 					console.log("Datastream ID: " + datastream_id);
 					let datastream_name = datastream[i].name
 					console.log("Datastream Name: " + datastream_name);
-					// Create unique div to contain each datastream
-					create_element("body","div",null,"id","container_" + datastream_id,null,null);
-					// Create h2 element
-					create_element("#container_" + datastream_id,"h2",datastream_name,"id","h2_" + datastream_id,null,null);
-					create_element("#h2_" + datastream_id,"span"," show ",null,null,null,null);
-					create_element("#h2_" + datastream_id + " span","a","chart","href","datastream_" + datastream_id + "_chart.htm","target","_blank");
-					create_element("#h2_" + datastream_id + " span",null," | ",null,null,null,null);
-					create_element("#h2_" + datastream_id + " span","a","gauge","href","datastream_" + datastream_id + "_gauge.htm","target","_blank");
+					// Create unique div to contain each datastream or tasking capability
+					if (datastream[i].observationType == "Actuator") {
+						create_element("#tasking_capability_container","div",null,"id","container_" + datastream_id,null,null);
+						// Create h2 element
+						create_element("#container_" + datastream_id,"h2",datastream_name,"id","h2_" + datastream_id,null,null);
+					} else {
+						create_element("#datastream_container","div",null,"id","container_" + datastream_id,null,null);
+						// Create h2 element
+						create_element("#container_" + datastream_id,"h2",datastream_name,"id","h2_" + datastream_id,null,null);
+						create_element("#h2_" + datastream_id,"span"," show ",null,null,null,null);
+						create_element("#h2_" + datastream_id + " span","a","chart","href","datastream_" + datastream_id + "_chart.htm","target","_blank");
+						create_element("#h2_" + datastream_id + " span",null," | ",null,null,null,null);
+						create_element("#h2_" + datastream_id + " span","a","gauge","href","datastream_" + datastream_id + "_gauge.htm","target","_blank");
+					}
 					//Create Datastream ID
 					create_element("#container_" + datastream_id,"p",null,"id","datastream_id_" + datastream_id,null,null);
 					create_element("#datastream_id_" + datastream_id,"span","ID: ","class","bold",null,null);
@@ -170,7 +181,11 @@ echo '<!doctype html>
 					// Create unordered list elements under Observed Property
 					create_element("#container_" + datastream_id,"ul",null,"class","observed_property",null,null);
 					// Create Sensor heading
-					create_element("#container_" + datastream_id,"h3","Sensor",null,null,null,null);
+					if (datastream[i].observationType == "Actuator") {
+						create_element("#container_" + datastream_id,"h3","Actuator",null,null,null,null);
+					} else {
+						create_element("#container_" + datastream_id,"h3","Sensor",null,null,null,null);
+					}
 					// Create unordered list elements under Sensor
 					create_element("#container_" + datastream_id,"ul",null,"class","sensor",null,null);
 					print_datastream_detail(datastream_id);
