@@ -47,6 +47,9 @@ if [[ "$observation_count" == "0" ]]; then
 	}" "$base_url/Observations"
 fi
 
+# Endless loop
+while [ true ]; do
+
 # Read current observation result from the server
 server_observation_result=`curl -X GET -H "Content-Type: application/json" "$base_url/Datastreams($datastream_id)/Observations"`
 server_observation_result=`echo $server_observation_result | sed -e 's/"result":/\n"result":/g' | grep '"result":'`
@@ -61,3 +64,6 @@ elif [[ "$server_observation_result" == "Off" ]]; then
 	turn_off_buzzer
 	echo "The buzzer is off."
 fi
+
+sleep 1
+done
