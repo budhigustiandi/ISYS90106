@@ -84,11 +84,17 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			done
 			echo "Observation interval is set to $hour hour(s) $minute minute(s) $second second(s)."
 			location_status=`cat configuration.txt | grep location_status | cut -d "=" -f 2`
+			sleep_count=0
 			while [[ True ]]; do
 				bash sync_configuration.sh
-				bash create_update_location.sh
-				bash create_observation.sh
-				sleep $observation_interval
+				bash create_task.sh
+				if (( sleep_count == $observation_interval )); then
+					bash create_update_location.sh
+					bash create_observation.sh
+					sleep_count=0
+				fi
+				(( sleep_count++ ))
+				sleep 1
 			done
 			break;;
 		"Update the thing.")

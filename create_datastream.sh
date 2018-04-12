@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script is not only create datastream(s) for the registered thing, but also create create_observation.sh script that process all the sensor readings automatically.
+# This script is not only create datastream(s) for the registered thing, but also create create_observation.sh script that processes all the sensor readings and update the tasking capability script(s) available in the tasking directory automatically.
 
 # Create header for the create_observation.sh
 
@@ -81,7 +81,19 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 
 	# Update create_observation.sh with conditional flow between sensing and tasking capability
 
-	if [[ "$datastream_observation_type" != "actuator" || "$datastream_observation_type" != "Actuator" || "$datastream_observation_type" != "ACTUATOR" ]]; then
+	if [[ "$datastream_observation_type" == "actuator" || "$datastream_observation_type" == "Actuator" || "$datastream_observation_type" == "ACTUATOR" ]]; then
+		while read line; do
+			echo $line | grep ^datastream_id
+			if [[ $? -eq 0 ]]; then
+				echo "datastream_id=$datastream_id" >> temporary_$observation_command
+			else
+				echo $line >> temporary_$observation_command
+			fi
+		done < $observation_command
+		mv temporary_configuration.txt configuration.txt
+		chmod 755 $observation_command
+		chown pi:pi $observation_command
+	else
 		echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> create_observation.sh
 		echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> create_observation.sh
 			echo '\"phenomenonTime\": \"$time\",' >> create_observation.sh

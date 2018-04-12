@@ -21,9 +21,11 @@ function turn_off_buzzer {
 	echo "0" > /sys/class/gpio/gpio7/value
 }
 
-base_url=`cat ../configuration.txt | grep base_url | cut -d "=" -f 2`
+# Do not change the datastream ID value as it will be generated automatically by the system!
+datastream_id=
+
+base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 echo "Base URL: $base_url"
-datastream_id=1931626
 echo "Datastream ID: $datastream_id"
 
 # Find if there is already an observation value in the datastream
@@ -47,9 +49,6 @@ if [[ "$observation_count" == "0" ]]; then
 	}" "$base_url/Observations"
 fi
 
-# Endless loop
-while [ true ]; do
-
 # Read current observation result from the server
 server_observation_result=`curl -X GET -H "Content-Type: application/json" "$base_url/Datastreams($datastream_id)/Observations"`
 server_observation_result=`echo $server_observation_result | sed -e 's/"result":/\n"result":/g' | grep '"result":'`
@@ -64,6 +63,3 @@ elif [[ "$server_observation_result" == "Off" ]]; then
 	turn_off_buzzer
 	echo "The buzzer is off."
 fi
-
-sleep 1
-done
