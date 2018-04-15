@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Project RATIH - Tasking Capability for Buzzer</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Buzzer Status</h1>
+	<p><span class="bold">Observation ID: </span><span id="observation_id_container"></span></p>
+	<p><span class="bold">Last Observation Time: </span><span id="last_observation_time"></span></p>
+	<p><span class="bold">Current Value: </span><span id="current_value"></span></p>
+	<img id="icon" src="" alt="Switch On Icon" height="100" width="100" onclick="toggleSwitch()">
+	<script>
+		// Read the data in JSON format from the SensorUp server then update the page based on the data
+		var observation_id = 1998531;
+		var current_result;
+		console.log("Observation ID: " + observation_id);
+		var observation = $.ajax({
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				console.log("Observation ID: " + observation.responseJSON["@iot.id"]);
+				document.querySelector("#observation_id_container").textContent = observation.responseJSON["@iot.id"];
+				console.log("Last Observation Time: " + observation.responseJSON.phenomenonTime);
+				document.querySelector("#last_observation_time").textContent = observation.responseJSON.phenomenonTime;
+				console.log("Current Result: " + observation.responseJSON.result);
+				document.querySelector("#current_value").textContent = observation.responseJSON.result;
+				if (observation.responseJSON.result == "On") {
+					console.log("Switch image to Switch On Icon.");
+					document.querySelector("#icon").setAttribute("src", "switch-on-icon.png");
+					current_result = "Off"; // For toggleSwitch function
+				} else if (observation.responseJSON.result == "Off") {
+					console.log("Switch image to Switch Off Icon.");
+					document.querySelector("#icon").setAttribute("src", "switch-off-icon.png");
+					current_result = "On"; // For toggleSwitch function
+				}
+			},
+			error: function(response, status){
+				console.log(response);
+				console.log(status);
+			}
+		});
+		function toggleSwitch(){
+			console.log("Switch has been toggled.");
+			let observation_time = new Date();
+			var update_observation = '{ ';
+			update_observation = update_observation + '"phenomenonTime": "' + observation_time.toISOString() + '",';
+			update_observation = update_observation + '"resultTime": "' + observation_time.toISOString() + '",';
+			update_observation = update_observation + '"result": "' + current_result + '"';
+			update_observation = update_observation + ' }';
+			console.log(update_observation);
+			$.ajax({
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
+				type: "PATCH",
+				data: update_observation,
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					var observation = $.ajax({
+						url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
+						type: "GET",
+						contentType: "application/json; charset=utf-8",
+						success: function(data){
+							console.log("Observation ID: " + observation.responseJSON["@iot.id"]);
+							document.querySelector("#observation_id_container").textContent = observation.responseJSON["@iot.id"];
+							console.log("Last Observation Time: " + observation.responseJSON.phenomenonTime);
+							document.querySelector("#last_observation_time").textContent = observation.responseJSON.phenomenonTime;
+							console.log("Current Result: " + observation.responseJSON.result);
+							document.querySelector("#current_value").textContent = observation.responseJSON.result;
+							if (observation.responseJSON.result == "On") {
+								console.log("Switch image to Switch On Icon.");
+								document.querySelector("#icon").setAttribute("src", "switch-on-icon.png");
+								current_result = "Off"; // For toggleSwitch function
+							} else if (observation.responseJSON.result == "Off") {
+								console.log("Switch image to Switch Off Icon.");
+								document.querySelector("#icon").setAttribute("src", "switch-off-icon.png");
+								current_result = "On"; // For toggleSwitch function
+							}
+						},
+						error: function(response, status){
+							console.log(response);
+							console.log(status);
+						}
+					});
+				},
+				error: function(response, status){
+					console.log(response);
+					console.log(status);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

@@ -85,14 +85,14 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		while read line; do
 			echo $line | grep ^datastream_id
 			if [[ $? -eq 0 ]]; then
-				echo "datastream_id=$datastream_id" >> temporary_$observation_command
+				echo "datastream_id=$datastream_id" >> tasking/temporary_$observation_command
 			else
-				echo $line >> temporary_$observation_command
+				echo $line >> tasking/temporary_$observation_command
 			fi
-		done < $observation_command
-		mv temporary_configuration.txt configuration.txt
-		chmod 755 $observation_command
-		chown pi:pi $observation_command
+		done < tasking/$observation_command
+		mv tasking/temporary_$observation_command tasking/$observation_command
+		chmod 755 tasking/$observation_command
+		chown pi:pi tasking/$observation_command
 	else
 		echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> create_observation.sh
 		echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> create_observation.sh

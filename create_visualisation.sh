@@ -919,3 +919,17 @@ echo '<!doctype html>
 # Put read_update_location.htm file to the visualisation server
 
 lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/read_update_datastream.htm"
+
+# Find task related file(s) in the visualisation directory
+
+task_count=`ls visualisation | grep ^task | wc -l`
+
+# Iterate through each task related file(s)
+
+for (( i=1; i<=$task_count; i++ )); do
+	task=`ls visualisation | grep ^task | head -i | tail -1`
+	
+	# Put task related file(s) to the visualisation server
+	
+	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/$task"
+done
