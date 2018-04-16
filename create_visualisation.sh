@@ -138,6 +138,8 @@ echo '<!doctype html>
 						create_element("#tasking_capability_container","div",null,"id","container_" + datastream_id,null,null);
 						// Create h2 element
 						create_element("#container_" + datastream_id,"h2",datastream_name,"id","h2_" + datastream_id,null,null);
+						create_element("#h2_" + datastream_id,"span"," show ",null,null,null,null);
+						create_element("#h2_" + datastream_id + " span","a","task","href","task_" + datastream_id + ".htm","target","_blank");
 					} else {
 						create_element("#datastream_container","div",null,"id","container_" + datastream_id,null,null);
 						// Create h2 element
@@ -287,9 +289,9 @@ done
 
 lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/main.css"
 
-####################################################
-# Create individual chart page for each datastream #
-####################################################
+############################################################
+# Create individual chart or task page for each datastream #
+############################################################
 
 #=======#
 # Chart #
@@ -338,6 +340,73 @@ done
 for (( i=1; i<=$number_of_datastream; i++ )); do
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	datastream_name=`cat configuration.txt | grep datastream_name | head -$i | tail -1 | cut -d "=" -f 2`
+	echo '<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>'$datastream_name'</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-more.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>' > visualisation/datastream_${datastream_id}_gauge.htm
+	echo '<p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
+	<div id="datastream_'$datastream_id'_gauge"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+				'"'"dataStreamId"'"': ['$datastream_id']
+			});
+			var request_'$i' = sensorthingsHCDT_'$i'.request();
+			if (request_'$i'.status == '"'"success"'"') {
+				sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
+			}
+		});
+	</script>
+	<script>
+		const SPEEDOMETER = document.querySelector("#speedometer");
+		const SOLID = document.querySelector("#solid");
+		function speedometer() {
+			document.querySelector("body script").innerHTML=$(function() {
+				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+					'"'"dataStreamId"'"': ['$datastream_id']
+				});
+				var request_'$i' = sensorthingsHCDT_'$i'.request();
+				if (request_'$i'.status == '"'"success"'"') {
+					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
+				}
+			});
+		}
+		function solid() {
+			document.querySelector("body script").innerHTML=$(function() {
+				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
+					'"'"dataStreamId"'"': ['$datastream_id']
+				});
+				var request_'$i' = sensorthingsHCDT_'$i'.request();
+				if (request_'$i'.status == '"'"success"'"') {
+					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"solid"'"', 0, 100, '$observation_interval');
+				}
+			});
+		}
+	</script>' >> visualisation/datastream_${datastream_id}_gauge.htm
+	echo '</body>
+	</html>' >> visualisation/datastream_${datastream_id}_gauge.htm
+
+	# Put each datastream gauge file to the visualisation server
+
+	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_gauge.htm"
+done
+
+#======#
+# Task #
+#======#
+
+for (( i=1; i<=$number_of_datastream; i++ )); do
+	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	echo '<!doctype html>
 	<html lang="en">
 	<head>
