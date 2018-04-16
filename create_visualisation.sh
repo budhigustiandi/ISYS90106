@@ -406,66 +406,122 @@ done
 #======#
 
 for (( i=1; i<=$number_of_datastream; i++ )); do
+	datastream_observation_type=`echo $datastream_query | sed 's/"observationType":/\n"observationType":/g' | grep "observationType": | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-	echo '<!doctype html>
-	<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>'$datastream_name'</title>
-		<link rel="stylesheet" href="main.css">
-		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-		<script src="https://code.highcharts.com/highcharts.js"></script>
-		<script src="https://code.highcharts.com/highcharts-more.js"></script>
-		<script src="https://code.highcharts.com/modules/exporting.js"></script>
-		<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
-	</head>
-	<body>' > visualisation/datastream_${datastream_id}_gauge.htm
-	echo '<p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
-	<div id="datastream_'$datastream_id'_gauge"></div>
-	<script>
-		$(function() {
-			var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
-				'"'"dataStreamId"'"': ['$datastream_id']
-			});
-			var request_'$i' = sensorthingsHCDT_'$i'.request();
-			if (request_'$i'.status == '"'"success"'"') {
-				sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
-			}
-		});
-	</script>
-	<script>
-		const SPEEDOMETER = document.querySelector("#speedometer");
-		const SOLID = document.querySelector("#solid");
-		function speedometer() {
-			document.querySelector("body script").innerHTML=$(function() {
-				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
-					'"'"dataStreamId"'"': ['$datastream_id']
+	if [[ "$datastream_observation_type" == "Actuator" || "$datastream_observation_type" == "actuator" || "$datastream_observation_type" == "ACTUATOR" ]]; then
+		echo '<!doctype html>
+		<html lang="en">
+		<head>
+			<meta charset="utf-8">
+			<title></title>
+			<link rel="stylesheet" href="main.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		</head>
+		<body>
+			<h1><span id="datastream_name"></span></h1>
+			<p><span class="bold">Observation ID: </span><span id="observation_id_container"></span></p>
+			<p><span class="bold">Last Observation Time: </span><span id="last_observation_time"></span></p>
+			<p><span class="bold">Current Value: </span><span id="current_value"></span></p>
+			<p><span class="bold">Tasking Parameter (Allowed Value): </span><span id="tasking_parameter"></span></p>
+			<p><span class="bold">Description: </span><span id="description"></span></p>
+			<p><span class="bold">New Value: </span><textarea id="new_value" placeholder="Insert tasking parameter (allowed value) here"></textarea></p>
+			<button id="update_observation" onclick="updateObservation();">Submit Task</button>
+			<script>
+				// Read the data in JSON format from the SensorUp server then update the page based on the data
+				var observation_id;
+				var datastream = $.ajax({
+					url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams('$datastream_id')?$expand=Observations,ObservedProperty,Sensor",
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					success: function(data){
+						console.log("Datastream Name: " + datastream.responseJSON.name);
+						document.querySelector("#datastream_name").textContent = datastream.responseJSON.name;
+						document.querySelector("title").textContent = datastream.responseJSON.name;
+						var observation = JSON.stringify(datastream.responseJSON.Observations);
+						observation = observation.slice(1,observation.length-1);
+						console.log("Observation: " + observation);
+						observation = JSON.parse(observation);
+						observation_id = observation["@iot.id"];
+						console.log("Observation ID: " + observation_id);
+						document.querySelector("#observation_id_container").textContent = observation_id;
+						console.log("Last Observation Time: " + observation.phenomenonTime);
+						document.querySelector("#last_observation_time").textContent = observation.phenomenonTime;
+						console.log("Current Result: " + observation.result);
+						document.querySelector("#current_value").textContent = observation.result;
+						var unit_of_measurement = JSON.stringify(datastream.responseJSON.unitOfMeasurement);
+						unit_of_measurement = JSON.parse(unit_of_measurement);
+						console.log("Tasking Parameter (Allowed Value): " + unit_of_measurement.name);
+						document.querySelector("#tasking_parameter").textContent = unit_of_measurement.name;
+						console.log("Description: " + unit_of_measurement.definition);
+						document.querySelector("#description").textContent = unit_of_measurement.definition;
+					},
+					error: function(response, status){
+						console.log(response);
+						console.log(status);
+					}
 				});
-				var request_'$i' = sensorthingsHCDT_'$i'.request();
-				if (request_'$i'.status == '"'"success"'"') {
-					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"speedometer"'"', 0, 100, '$observation_interval');
+				function updateObservation(){
+					let observation_time = new Date();
+					let new_value = document.querySelector("#new_value").value
+					var update_observation = '{ ';
+					update_observation = update_observation + '"phenomenonTime": "' + observation_time.toISOString() + '",';
+					update_observation = update_observation + '"resultTime": "' + observation_time.toISOString() + '",';
+					update_observation = update_observation + '"result": "' + new_value + '"';
+					update_observation = update_observation + ' }';
+					console.log(update_observation);
+					$.ajax({
+						url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
+						type: "PATCH",
+						data: update_observation,
+						contentType: "application/json; charset=utf-8",
+						success: function(data){
+							var datastream = $.ajax({
+							url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams('$datastream_id')?$expand=Observations,ObservedProperty,Sensor",
+							type: "GET",
+							contentType: "application/json; charset=utf-8",
+							success: function(data){
+								console.log("Datastream Name: " + datastream.responseJSON.name);
+								document.querySelector("#datastream_name").textContent = datastream.responseJSON.name;
+								document.querySelector("title").textContent = datastream.responseJSON.name;
+								var observation = JSON.stringify(datastream.responseJSON.Observations);
+								observation = observation.slice(1,observation.length-1);
+								console.log("Observation: " + observation);
+								observation = JSON.parse(observation);
+								observation_id = observation["@iot.id"];
+								console.log("Observation ID: " + observation_id);
+								document.querySelector("#observation_id_container").textContent = observation_id;
+								console.log("Last Observation Time: " + observation.phenomenonTime);
+								document.querySelector("#last_observation_time").textContent = observation.phenomenonTime;
+								console.log("Current Result: " + observation.result);
+								document.querySelector("#current_value").textContent = observation.result;
+								var unit_of_measurement = JSON.stringify(datastream.responseJSON.unitOfMeasurement);
+								unit_of_measurement = JSON.parse(unit_of_measurement);
+								console.log("Tasking Parameter (Allowed Value): " + unit_of_measurement.name);
+								document.querySelector("#tasking_parameter").textContent = unit_of_measurement.name;
+								console.log("Description: " + unit_of_measurement.definition);
+								document.querySelector("#description").textContent = unit_of_measurement.definition;
+							},
+							error: function(response, status){
+								console.log(response);
+								console.log(status);
+							}
+						});
+						},
+						error: function(response, status){
+							console.log(response);
+							console.log(status);
+						}
+					});
 				}
-			});
-		}
-		function solid() {
-			document.querySelector("body script").innerHTML=$(function() {
-				var sensorthingsHCDT_'$i' = new SensorthingsHCDT('"'"$base_url"'"', {
-					'"'"dataStreamId"'"': ['$datastream_id']
-				});
-				var request_'$i' = sensorthingsHCDT_'$i'.request();
-				if (request_'$i'.status == '"'"success"'"') {
-					sensorthingsHCDT_'$i'.gauge('"'"datastream_${datastream_id}_gauge"'"', request_'$i', '"'"solid"'"', 0, 100, '$observation_interval');
-				}
-			});
-		}
-	</script>' >> visualisation/datastream_${datastream_id}_gauge.htm
-	echo '</body>
-	</html>' >> visualisation/datastream_${datastream_id}_gauge.htm
+			</script>
+		</body>
+		</html>
+		' > visualisation/task_${datastream_id}.htm
+		
+		# Put each task file to the visualisation server
 
-	# Put each datastream gauge file to the visualisation server
-
-	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/datastream_${datastream_id}_gauge.htm"
+		lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/task_${datastream_id}.htm"
+	fi
 done
 
 #####################################
