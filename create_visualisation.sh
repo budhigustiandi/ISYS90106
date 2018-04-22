@@ -406,9 +406,18 @@ done
 #======#
 
 for (( i=1; i<=$number_of_datastream; i++ )); do
-	datastream_observation_type=`echo $datastream_query | sed 's/"observationType":/\n"observationType":/g' | grep "observationType": | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	datastream_observation_type=`echo $datastream_query | sed 's/"observationType":/\n"observationType":/g' | grep '"observationType":' | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
+	echo "############################"
+	echo "DATASTREAM OBSERVATION TYPE: "$datastream_observation_type
+	echo "############################"
 	datastream_id=`echo $datastream_query | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | tail -$i | head -1 | cut -d ":" -f 2 | cut -d "," -f 1`
-	if [[ "$datastream_observation_type" == "Actuator" || "$datastream_observation_type" == "actuator" || "$datastream_observation_type" == "ACTUATOR" ]]; then
+	echo "################"
+        echo "# DATASTREAM ID: "$datastream_id
+        echo "################"
+	if [[ "$datastream_observation_type" == '"Actuator"' || "$datastream_observation_type" == '"actuator"' || "$datastream_observation_type" == '"ACTUATOR"' ]]; then
+		echo "#############################################"
+		echo "# Create a task page for datastream "$datastream_id" #"
+		echo "#############################################"
 		echo '<!doctype html>
 		<html lang="en">
 		<head>
@@ -463,11 +472,11 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				function updateObservation(){
 					let observation_time = new Date();
 					let new_value = document.querySelector("#new_value").value
-					var update_observation = '{ ';
-					update_observation = update_observation + '"phenomenonTime": "' + observation_time.toISOString() + '",';
-					update_observation = update_observation + '"resultTime": "' + observation_time.toISOString() + '",';
-					update_observation = update_observation + '"result": "' + new_value + '"';
-					update_observation = update_observation + ' }';
+					var update_observation = '"'"'{ '"'"';
+					update_observation = update_observation + '"'"'"phenomenonTime": "'"'"' + observation_time.toISOString() + '"'"'",'"'"';
+					update_observation = update_observation + '"'"'"resultTime": "'"'"' + observation_time.toISOString() + '"'"'",'"'"';
+					update_observation = update_observation + '"'"'"result": "'"'"' + new_value + '"'"'"'"'"';
+					update_observation = update_observation + '"'"' }'"'"';
 					console.log(update_observation);
 					$.ajax({
 						url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
@@ -515,8 +524,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 				}
 			</script>
 		</body>
-		</html>
-		' > visualisation/task_${datastream_id}.htm
+		</html>' > visualisation/task_${datastream_id}.htm
 
 		# Put each task file to the visualisation server
 

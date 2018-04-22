@@ -70,15 +70,6 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 
 	datastream_id=`echo $query_result | sed 's/@iot.id/\n@iot.id/g' | grep @iot.id | head -1 | tail -1 | cut -d ":" -f 2 | cut -d "," -f 1`
 
-	# Conditional flow for python and bash script type of observation command
-
-	observation_command_extention=`echo observation_command | cut -d "." -f 2`
-	if [[ "$observation_command_extention" == "py" ]]; then
-		echo 'observation_result=`sudo python observation/'$observation_command'`' >> create_observation.sh
-	elif [[ "$observation_command_extention" = "sh" ]]; then
-		echo 'observation_result=`bash observation/'$observation_command'`' >> create_observation.sh
-	fi
-
 	# Update create_observation.sh with conditional flow between sensing and tasking capability
 
 	if [[ "$datastream_observation_type" == "actuator" || "$datastream_observation_type" == "Actuator" || "$datastream_observation_type" == "ACTUATOR" ]]; then
@@ -94,6 +85,14 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		chmod 755 tasking/$observation_command
 		chown pi:pi tasking/$observation_command
 	else
+		# Conditional flow for python and bash script type of observation command
+
+        	observation_command_extention=`echo observation_command | cut -d "." -f 2`
+        	if [[ "$observation_command_extention" == "py" ]]; then
+                	echo 'observation_result=`sudo python observation/'$observation_command'`' >> create_observation.sh
+        	elif [[ "$observation_command_extention" = "sh" ]]; then
+                	echo 'observation_result=`bash observation/'$observation_command'`' >> create_observation.sh
+        	fi
 		echo 'time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`' >> create_observation.sh
 		echo 'curl -X POST -H "Content-Type: application/json" -d "{' >> create_observation.sh
 			echo '\"phenomenonTime\": \"$time\",' >> create_observation.sh
