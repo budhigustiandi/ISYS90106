@@ -87,7 +87,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 	else
 		# Conditional flow for python and bash script type of observation command
 
-        	observation_command_extention=`echo observation_command | cut -d "." -f 2`
+        	observation_command_extention=`echo $observation_command | cut -d "." -f 2`
         	if [[ "$observation_command_extention" == "py" ]]; then
                 	echo 'observation_result=`sudo python observation/'$observation_command'`' >> create_observation.sh
         	elif [[ "$observation_command_extention" = "sh" ]]; then

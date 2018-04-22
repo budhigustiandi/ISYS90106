@@ -22,7 +22,7 @@ echo "0" > /sys/class/gpio/gpio7/value
 }
 
 # Do not change the datastream ID value as it will be generated automatically by the system!
-datastream_id=2111939
+datastream_id=2114542
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 echo "Base URL: $base_url"
@@ -39,20 +39,20 @@ if [[ "$observation_count" == "0" ]]; then
 echo "There is no observation exist in the datastream. An observation will be created."
 observation_time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`
 echo "Observation Time: $observation_time"
-observation_result=Null
+observation_result=NULL
 echo "Observation Result: $observation_result"
-curl -X POST -H "Content-Type: application/json" -d "{
-"phenomenonTime": "$observation_time",
-"resultTime": "$observation_time",
-"result": "$observation_result",
-"Datastream":{"@iot.id":$datastream_id}
-}" "$base_url/Observations"
+curl -X POST -H "Content-Type: application/json" -d '{
+"phenomenonTime": "'$observation_time'",
+"resultTime": "'$observation_time'",
+"result": "'$observation_result'",
+"Datastream":{"@iot.id":'$datastream_id'}
+}' "$base_url/Observations"
 fi
 
 # Read current observation result from the server
 server_observation_result=`curl -X GET -H "Content-Type: application/json" "$base_url/Datastreams($datastream_id)/Observations"`
-server_observation_result=`echo $server_observation_result | sed -e 's/"result":/n"result":/g' | grep '"result":'`
-server_observation_result=`echo $server_observation_result | cut -d '"' -f 4`
+#server_observation_result=`echo $server_observation_result | sed -e 's/"result":/n"result":/g' | grep '"result":'`
+server_observation_result=`echo $server_observation_result | cut -d '"' -f 18`
 echo "Server Observation Result: $server_observation_result"
 
 # Turn on or off buzzer based on the server_observation_result

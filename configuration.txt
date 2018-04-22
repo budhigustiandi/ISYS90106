@@ -166,7 +166,7 @@ datastream_description=Modified datastream for controlling a buzzer attached to 
 datastream_observation_type=Actuator
 unit_of_measurement_name=On | Off
 unit_of_measurement_symbol=N/A
-unit_of_measurement_definition=On to turn on the buzzer; Off to turn off the buzzer
+unit_of_measurement_definition=On to turn on the buzzer; Off to turn off the buzzer; Other values will turn the buzzer of.
 
 	#####################
 	# OBSERVED PROPERTY #
@@ -200,7 +200,7 @@ datastream_description=Modified datastream for controlling a three-color LED att
 datastream_observation_type=Actuator
 unit_of_measurement_name=Red | Green | Blue | Yellow | Magenta | Cyan | White | Off
 unit_of_measurement_symbol=N/A
-unit_of_measurement_definition=Choose a color to turn on the LED; Off to turn off the LED
+unit_of_measurement_definition=Choose a color to turn on the LED; Off to turn off the LED; Other values will turn the LED off.
 
 	#####################
 	# OBSERVED PROPERTY #
