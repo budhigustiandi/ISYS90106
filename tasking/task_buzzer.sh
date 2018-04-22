@@ -22,7 +22,7 @@ function turn_off_buzzer {
 }
 
 # Do not change the datastream ID value as it will be generated automatically by the system!
-datastream_id=
+datastream_id=1931626
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 echo "Base URL: $base_url"

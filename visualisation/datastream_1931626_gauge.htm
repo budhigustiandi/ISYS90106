@@ -2,7 +2,7 @@
 	<html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Room Light Intensity</title>
+		<title>Buzzer</title>
 		<link rel="stylesheet" href="main.css">
 		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
@@ -13,15 +13,15 @@
 	</head>
 	<body>
 <p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
-	<div id="datastream__gauge"></div>
+	<div id="datastream_1931626_gauge"></div>
 	<script>
 		$(function() {
-			var sensorthingsHCDT_3 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
-				'dataStreamId': []
+			var sensorthingsHCDT_4 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				'dataStreamId': [1931626]
 			});
-			var request_3 = sensorthingsHCDT_3.request();
-			if (request_3.status == 'success') {
-				sensorthingsHCDT_3.gauge('datastream__gauge', request_3, 'speedometer', 0, 100, 60000);
+			var request_4 = sensorthingsHCDT_4.request();
+			if (request_4.status == 'success') {
+				sensorthingsHCDT_4.gauge('datastream_1931626_gauge', request_4, 'speedometer', 0, 100, 300000);
 			}
 		});
 	</script>
@@ -30,23 +30,23 @@
 		const SOLID = document.querySelector("#solid");
 		function speedometer() {
 			document.querySelector("body script").innerHTML=$(function() {
-				var sensorthingsHCDT_3 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
-					'dataStreamId': []
+				var sensorthingsHCDT_4 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [1931626]
 				});
-				var request_3 = sensorthingsHCDT_3.request();
-				if (request_3.status == 'success') {
-					sensorthingsHCDT_3.gauge('datastream__gauge', request_3, 'speedometer', 0, 100, 60000);
+				var request_4 = sensorthingsHCDT_4.request();
+				if (request_4.status == 'success') {
+					sensorthingsHCDT_4.gauge('datastream_1931626_gauge', request_4, 'speedometer', 0, 100, 300000);
 				}
 			});
 		}
 		function solid() {
 			document.querySelector("body script").innerHTML=$(function() {
-				var sensorthingsHCDT_3 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
-					'dataStreamId': []
+				var sensorthingsHCDT_4 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [1931626]
 				});
-				var request_3 = sensorthingsHCDT_3.request();
-				if (request_3.status == 'success') {
-					sensorthingsHCDT_3.gauge('datastream__gauge', request_3, 'solid', 0, 100, 60000);
+				var request_4 = sensorthingsHCDT_4.request();
+				if (request_4.status == 'success') {
+					sensorthingsHCDT_4.gauge('datastream_1931626_gauge', request_4, 'solid', 0, 100, 300000);
 				}
 			});
 		}

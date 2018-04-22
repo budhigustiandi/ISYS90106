@@ -86,9 +86,12 @@ select main_menu in "Run the thing." "Update the thing." "Create a new thing." "
 			location_status=`cat configuration.txt | grep location_status | cut -d "=" -f 2`
 			sleep_count=0
 			while [[ True ]]; do
+				echo "##########################"
+				echo 'Sleep Count: '$sleep_count
+				echo "##########################"
 				bash sync_configuration.sh
 				bash create_task.sh
-				if (( sleep_count == $observation_interval )); then
+				if (( $sleep_count == $observation_interval )); then
 					bash create_update_location.sh
 					bash create_observation.sh
 					sleep_count=0

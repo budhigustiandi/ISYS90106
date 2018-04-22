@@ -517,7 +517,7 @@ for (( i=1; i<=$number_of_datastream; i++ )); do
 		</body>
 		</html>
 		' > visualisation/task_${datastream_id}.htm
-		
+
 		# Put each task file to the visualisation server
 
 		lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/task_${datastream_id}.htm"
@@ -1041,7 +1041,7 @@ echo '<!doctype html>
 </body>
 </html>' > visualisation/read_update_datastream.htm
 
-# Put read_update_location.htm file to the visualisation server
+# Put read_update_datastream.htm file to the visualisation server
 
 lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/read_update_datastream.htm"
 
@@ -1052,9 +1052,9 @@ task_count=`ls visualisation | grep ^task | wc -l`
 # Iterate through each task related file(s)
 
 for (( i=1; i<=$task_count; i++ )); do
-	task=`ls visualisation | grep ^task | head -i | tail -1`
-	
+	task=`ls visualisation | grep ^task | head -$i | tail -1`
+
 	# Put task related file(s) to the visualisation server
-	
+
 	lftp -c "open -p 21 -u $username,$password $site; cd public_html; put visualisation/$task"
 done
