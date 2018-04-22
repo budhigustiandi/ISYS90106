@@ -229,7 +229,7 @@ unit_of_measurement_definition=Choose a color to turn on the LED; Off to turn of
 # OBSERVATION INTERVAL #
 ########################
 
-observation_interval=30
+observation_interval=60
 
 ##################################
 # VISUALISATION SERVER PARAMETER #
