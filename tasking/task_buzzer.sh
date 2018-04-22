@@ -39,7 +39,7 @@ if [[ "$observation_count" == "0" ]]; then
 	echo "There is no observation exist in the datastream. An observation will be created."
 	observation_time=`date +"%Y-%m-%dT%H:%M:%S.000Z"`
 	echo "Observation Time: $observation_time"
-	observation_result=Off
+	observation_result=Null
 	echo "Observation Result: $observation_result"
 	curl -X POST -H "Content-Type: application/json" -d "{
 		\"phenomenonTime\": \"$observation_time\",
@@ -62,4 +62,6 @@ if [[ "$server_observation_result" == "On" ]]; then
 elif [[ "$server_observation_result" == "Off" ]]; then
 	turn_off_buzzer
 	echo "The buzzer is off."
+else
+	echo "The input is undefined."
 fi
