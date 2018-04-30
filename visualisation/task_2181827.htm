@@ -1,0 +1,107 @@
+<!doctype html>
+		<html lang="en">
+		<head>
+			<meta charset="utf-8">
+			<title></title>
+			<link rel="stylesheet" href="main.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		</head>
+		<body>
+			<h1><span id="datastream_name"></span></h1>
+			<p><span class="bold">Observation ID: </span><span id="observation_id_container"></span></p>
+			<p><span class="bold">Last Observation Time: </span><span id="last_observation_time"></span></p>
+			<p><span class="bold">Current Value: </span><span id="current_value"></span></p>
+			<p><span class="bold">Tasking Parameter (Allowed Value): </span><span id="tasking_parameter"></span></p>
+			<p><span class="bold">Description: </span><span id="description"></span></p>
+			<p><span class="bold">New Value: </span><textarea id="new_value" placeholder="Insert tasking parameter (allowed value) here"></textarea></p>
+			<button id="update_observation" onclick="updateObservation();">Submit Task</button>
+			<script>
+				// Read the data in JSON format from the SensorUp server then update the page based on the data
+				var observation_id;
+				var datastream = $.ajax({
+					url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(2181827)?$expand=Observations,ObservedProperty,Sensor",
+					type: "GET",
+					contentType: "application/json; charset=utf-8",
+					success: function(data){
+						console.log("Datastream Name: " + datastream.responseJSON.name);
+						document.querySelector("#datastream_name").textContent = datastream.responseJSON.name;
+						document.querySelector("title").textContent = datastream.responseJSON.name;
+						var observation = JSON.stringify(datastream.responseJSON.Observations);
+						observation = observation.slice(1,observation.length-1);
+						console.log("Observation: " + observation);
+						observation = JSON.parse(observation);
+						observation_id = observation["@iot.id"];
+						console.log("Observation ID: " + observation_id);
+						document.querySelector("#observation_id_container").textContent = observation_id;
+						console.log("Last Observation Time: " + observation.phenomenonTime);
+						document.querySelector("#last_observation_time").textContent = observation.phenomenonTime;
+						console.log("Current Result: " + observation.result);
+						document.querySelector("#current_value").textContent = observation.result;
+						var unit_of_measurement = JSON.stringify(datastream.responseJSON.unitOfMeasurement);
+						unit_of_measurement = JSON.parse(unit_of_measurement);
+						console.log("Tasking Parameter (Allowed Value): " + unit_of_measurement.name);
+						document.querySelector("#tasking_parameter").textContent = unit_of_measurement.name;
+						console.log("Description: " + unit_of_measurement.definition);
+						document.querySelector("#description").textContent = unit_of_measurement.definition;
+					},
+					error: function(response, status){
+						console.log(response);
+						console.log(status);
+					}
+				});
+				function updateObservation(){
+					let observation_time = new Date();
+					let new_value = document.querySelector("#new_value").value
+					var update_observation = '{ ';
+					update_observation = update_observation + '"phenomenonTime": "' + observation_time.toISOString() + '",';
+					update_observation = update_observation + '"resultTime": "' + observation_time.toISOString() + '",';
+					update_observation = update_observation + '"result": "' + new_value + '"';
+					update_observation = update_observation + ' }';
+					console.log(update_observation);
+					$.ajax({
+						url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Observations(" + observation_id + ")",
+						type: "PATCH",
+						data: update_observation,
+						contentType: "application/json; charset=utf-8",
+						success: function(data){
+							var datastream = $.ajax({
+							url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Datastreams(2181827)?$expand=Observations,ObservedProperty,Sensor",
+							type: "GET",
+							contentType: "application/json; charset=utf-8",
+							success: function(data){
+								console.log("Datastream Name: " + datastream.responseJSON.name);
+								document.querySelector("#datastream_name").textContent = datastream.responseJSON.name;
+								document.querySelector("title").textContent = datastream.responseJSON.name;
+								var observation = JSON.stringify(datastream.responseJSON.Observations);
+								observation = observation.slice(1,observation.length-1);
+								console.log("Observation: " + observation);
+								observation = JSON.parse(observation);
+								observation_id = observation["@iot.id"];
+								console.log("Observation ID: " + observation_id);
+								document.querySelector("#observation_id_container").textContent = observation_id;
+								console.log("Last Observation Time: " + observation.phenomenonTime);
+								document.querySelector("#last_observation_time").textContent = observation.phenomenonTime;
+								console.log("Current Result: " + observation.result);
+								document.querySelector("#current_value").textContent = observation.result;
+								var unit_of_measurement = JSON.stringify(datastream.responseJSON.unitOfMeasurement);
+								unit_of_measurement = JSON.parse(unit_of_measurement);
+								console.log("Tasking Parameter (Allowed Value): " + unit_of_measurement.name);
+								document.querySelector("#tasking_parameter").textContent = unit_of_measurement.name;
+								console.log("Description: " + unit_of_measurement.definition);
+								document.querySelector("#description").textContent = unit_of_measurement.definition;
+							},
+							error: function(response, status){
+								console.log(response);
+								console.log(status);
+							}
+						});
+						},
+						error: function(response, status){
+							console.log(response);
+							console.log(status);
+						}
+					});
+				}
+			</script>
+		</body>
+		</html>

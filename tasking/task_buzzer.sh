@@ -22,7 +22,7 @@ echo "0" > /sys/class/gpio/gpio7/value
 }
 
 # Do not change the datastream ID value as it will be generated automatically by the system!
-datastream_id=2168554
+datastream_id=2183679
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 echo "Base URL: $base_url"

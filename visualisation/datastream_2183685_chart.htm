@@ -1,0 +1,27 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Three-Color LED</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="https://code.highcharts.com/stock/highstock.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>
+<div id="datastream_2183685_chart"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_6 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				'dataStreamId': [2183685]
+			});
+			var request_6 = sensorthingsHCDT_6.request();
+			if (request_6.status == 'success') {
+				sensorthingsHCDT_6.chart('datastream_2183685_chart', request_6, false, 10000);
+			}
+		});
+	</script>
+</body>
+	</html>

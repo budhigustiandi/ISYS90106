@@ -1,0 +1,55 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Three-Color LED</title>
+		<link rel="stylesheet" href="main.css">
+		<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-more.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+		<script src="https://sdk.sensorup.com/sensorthings-hcdt/v0.1/sensorthings-hcdt.js"></script>
+	</head>
+	<body>
+<p>Choose gauge type: <button id="speedometer" onclick="speedometer();">Speedometer</button> | <button id="solid" onclick="solid();">Solid</button></p>
+	<div id="datastream_2183691_gauge"></div>
+	<script>
+		$(function() {
+			var sensorthingsHCDT_7 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+				'dataStreamId': [2183691]
+			});
+			var request_7 = sensorthingsHCDT_7.request();
+			if (request_7.status == 'success') {
+				sensorthingsHCDT_7.gauge('datastream_2183691_gauge', request_7, 'speedometer', 0, 100, 10000);
+			}
+		});
+	</script>
+	<script>
+		const SPEEDOMETER = document.querySelector("#speedometer");
+		const SOLID = document.querySelector("#solid");
+		function speedometer() {
+			document.querySelector("body script").innerHTML=$(function() {
+				var sensorthingsHCDT_7 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [2183691]
+				});
+				var request_7 = sensorthingsHCDT_7.request();
+				if (request_7.status == 'success') {
+					sensorthingsHCDT_7.gauge('datastream_2183691_gauge', request_7, 'speedometer', 0, 100, 10000);
+				}
+			});
+		}
+		function solid() {
+			document.querySelector("body script").innerHTML=$(function() {
+				var sensorthingsHCDT_7 = new SensorthingsHCDT('https://scratchpad.sensorup.com/OGCSensorThings/v1.0', {
+					'dataStreamId': [2183691]
+				});
+				var request_7 = sensorthingsHCDT_7.request();
+				if (request_7.status == 'success') {
+					sensorthingsHCDT_7.gauge('datastream_2183691_gauge', request_7, 'solid', 0, 100, 10000);
+				}
+			});
+		}
+	</script>
+</body>
+	</html>
