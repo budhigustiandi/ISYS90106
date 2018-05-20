@@ -32,9 +32,9 @@ echo '<!doctype html>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-<p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(1684190)?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
+<p>Click <a href="https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things('$thing_id')?$expand=Locations,Datastreams" target="_blank"><button>here</button></a> to show data in JSON format</p>
 <h1>Thing</h1>
-	<p><span class="bold">ID in the server: </span>1684190</p>
+	<p><span class="bold">ID in the server: </span>'$thing_id'</p>
 	<p><span class="bold">Name: </span><span id="thing_name"></span></p>
 	<p><span class="bold">Description: </span><span id="thing_description"></span></p>
 	<p><span class="bold">Properties: </span><span id="thing_property"></span></p>
