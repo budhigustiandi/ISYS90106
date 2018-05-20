@@ -21,7 +21,7 @@
 	<a href="index.htm"><button>Back to main page</button></a>
 	<script>
 		var thing = $.ajax({
-			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(2183665)?$expand=Locations,Datastreams",
+			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(2190547)?$expand=Locations,Datastreams",
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			success: function(data){
@@ -49,7 +49,7 @@
 		});
 		function updateLocation(){
 			var thing = $.ajax({
-				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(2183665)?$expand=Locations,Datastreams",
+				url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(2190547)?$expand=Locations,Datastreams",
 				type: "GET",
 				contentType: "application/json; charset=utf-8",
 				success: function(data){

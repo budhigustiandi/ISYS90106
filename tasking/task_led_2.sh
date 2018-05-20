@@ -76,7 +76,7 @@ turn_off_blue_LED
 }
 
 # Do not change the datastream ID value as it will be generated automatically by the system!
-datastream_id=2183685
+datastream_id=2190570
 
 base_url=`cat configuration.txt | grep base_url | cut -d "=" -f 2`
 echo "Base URL: $base_url"

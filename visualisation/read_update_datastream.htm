@@ -45,7 +45,7 @@
 		create_element("body","div",null,"id","tasking_capability_container",null,null);
 		create_element("#tasking_capability_container","h1","Tasking Capability",null,null,null,null);
 		// Read the data in JSON format from the SensorUp server then update the page based on the data
-		var thing_id = 2183665;
+		var thing_id = 2190547;
 		console.log("Thing ID: " + thing_id);
 		var thing = $.ajax({
 			url: "https://scratchpad.sensorup.com/OGCSensorThings/v1.0/Things(" + thing_id + ")?$expand=Locations,Datastreams",
